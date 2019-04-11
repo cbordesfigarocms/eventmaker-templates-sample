@@ -1,1 +1,2 @@
-# Eventmaker.io Templates Sample based on Shopify Liquid Templating Language
+# Eventmaker.io Templates Sample 
+Based on Shopify Liquid Templating Language
