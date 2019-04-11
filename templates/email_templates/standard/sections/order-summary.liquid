@@ -1,0 +1,687 @@
+{% assign button_color = settings.color_button %}
+{% if section.settings.enable_custom_css == true %}
+  {% assign button_color = section.settings.button_color %}
+{% endif %}
+
+<!-- ACCREDITATIONS -->
+{% if section.settings.enable_accreditations_table == true %}
+  {% if section.settings.sort_traits_key != blank %}
+    {% assign sort_by = section.settings.sort_traits_key | prepend: "trait_" %}
+    {% assign sorted_access_privileges = guest.access_privileges | sort: sort_by %}
+  {% else %}
+    {% assign sorted_access_privileges = guest.access_privileges %}
+  {% endif %}
+
+  {% for privilege in sorted_access_privileges %}
+    {% if section.settings.filter_trait_key != blank and section.settings.filter_trait_value != blank %}
+      {% if privilege.accesspoint_traits[section.settings.filter_trait_key] == section.settings.filter_trait_value %}
+        {% assign has_access_privileges = true %}
+        {% break %}
+      {% endif %}
+    {% else %}
+      {% assign has_access_privileges = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  {% if has_access_privileges == true %}
+    <!--[if mso | IE]>
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+    <![endif]-->
+    <div style="margin:0 auto;max-width:600px;background:#fff;">
+      <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#fff;" align="center" border="0">
+        <tbody>
+          <tr>
+            <td style="text-align:center;vertical-align:top;font-size:0px;padding:0px;">
+              <!--[if mso | IE]>
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="vertical-align:top;width:600px;">
+              <![endif]-->
+              <div aria-labelledby="mj-column-per-100" class="mj-column-per-100" style="vertical-align:top;display:inline-block;font-size:13px;text-align:left;width:100%;">
+                <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                  <tbody>
+                    <tr>
+                      <td style="word-break:break-word;background:#FFF;font-size:0px;padding:10px 25px;" align="left" background="#FFF">
+                        <table cellpadding="0" cellspacing="0" style="color:#000;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;" width="100%" border="0">
+                          {% if section.settings.accreditations_table_title != blank %}
+                            <tr style="text-align:left;">
+                              <th colspan="2" style="padding: 0 0 5px 0;"><h4 style="text-align:left">{{ section.settings.accreditations_table_title | escape }}</h4></th>
+                            </tr>
+                          {% endif %}
+
+                          {% for privilege in sorted_access_privileges %}
+
+                            {% assign access_name_key = "localized_name" %}
+                            {% if section.settings.filter_trait_key != blank and section.settings.filter_trait_value != blank %}
+                              {% if privilege.accesspoint_traits[section.settings.filter_trait_key] == section.settings.filter_trait_value %}
+                                {% if section.settings.label_trait_key != blank and privilege.accesspoint_traits[section.settings.label_trait_key] != blank %}
+                                  {% assign access_name_key = "localized_traits__" | append: section.settings.label_trait_key %}
+                                {% endif %}
+                              {% endif %}
+                            {% else %}
+                              {% if section.settings.label_trait_key != blank and privilege.accesspoint_traits[section.settings.label_trait_key] != blank %}
+                                {% assign access_name_key = "localized_traits__" | append: section.settings.label_trait_key %}
+                              {% endif %}
+                            {% endif %}
+                            {% assign access_name = privilege.accesspoint[access_name_key] %}
+
+                            {% if access_name != blank %}
+                              <tr style="text-align:left;">
+                                <td style="padding: 5px 10px; border:1px solid #ecedee;">
+                                  <strong>{{ access_name }}</strong>
+                                  {% if privilege.accesspoint_traits.description != nil and privilege.accesspoint_traits.description != blank %}
+                                    <br /><small>{{ privilege.accesspoint.localized_traits__description }}</small>
+                                  {% endif %}
+                                </td>
+                              </tr>
+                            {% endif %}
+                          {% endfor %}
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]>
+                    </td>
+                  </tr>
+                </table>
+              <![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]>
+          </td>
+        </tr>
+      </table>
+    <![endif]-->
+  {% endif %}
+{% endif %}
+
+
+<!-- LINKED GUESTS -->
+{% if section.settings.enable_linked_guests_table == true and linked_guests.size > 0 %}
+
+  <!--[if mso | IE]>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
+      <tr>
+        <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+  <![endif]-->
+  <div style="margin:0 auto;max-width:600px;background:#fff;">
+    <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#fff;" align="center" border="0">
+      <tbody>
+        <tr>
+          <td style="text-align:center;vertical-align:top;font-size:0px;padding:0px;">
+            <!--[if mso | IE]>
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="vertical-align:top;width:600px;">
+            <![endif]-->
+            <div aria-labelledby="mj-column-per-100" class="mj-column-per-100" style="vertical-align:top;display:inline-block;font-size:13px;text-align:left;width:100%;">
+              <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                <tbody>
+                  <tr>
+                    <td style="word-break:break-word;background:#FFF;font-size:0px;padding:10px 25px;" align="left" background="#FFF">
+                      <table cellpadding="0" cellspacing="0" style="color:#000;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;" width="100%" border="0">
+                        {% if section.settings.linked_guests_table_title != blank %}
+                          <tr style="text-align:left;">
+                            <th colspan="2" style="padding: 0 0 5px 0;"><h4 style="text-align:left">{{ section.settings.linked_guests_table_title | escape }}</h4></th>
+                          </tr>
+                        {% endif %}
+
+                        {% for lg in linked_guests %}
+                          {% assign category = lg.guest_category %}
+                          <tr style="text-align:left;">
+                            <td style="padding: 5px 10px; border:1px solid #ecedee;">
+                              <strong>{{ lg[section.settings.identity_field] }}</strong>
+
+                              {% if section.settings.display_category_name == true %}
+                                <!-- Configure guest category trait 'label' for custom label -->
+                                {% if category.traits.label != "" and category.traits.label != nil %}
+                                  <small>- {{ category.localized_traits__label }}</small>
+                                {% else %}
+                                  <small>- {{ category.localized_name }}</small>
+                                {% endif %}
+                              {% endif %}
+
+                              <br />
+
+                              {% if section.settings.display_category_description == true and category.traits.description != blank and category.traits.description != nil %}
+                                <!-- Configure guest category trait 'description' for custom description -->
+                                <div style="margin-top: 10px">{{ category.localized_traits__description }}</div>
+                              {% endif %}
+
+                              <!-- Display linked guest access privileges -->
+                              {% if section.settings.display_access_privileges == true and lg.access_privileges.size > 0 %}
+                                <ul style="margin: 10px 0 0; font-size: 95%;">
+                                  {% for access_privilege in lg.access_privileges %}
+                                    <li>
+                                      <!-- Configure accesspoint trait 'label' for custom label -->
+                                      {% if access_privilege.accesspoint_traits.label != nil and access_privilege.accesspoint_traits.label != blank %}
+                                        {{ access_privilege.accesspoint.localized_traits__label }}
+                                      {% else %}
+                                        {{ access_privilege.accesspoint.localized_name }}
+                                      {% endif %}
+
+                                      <!-- Configure accesspoint trait 'description' for custom description -->
+                                      {% if access_privilege.accesspoint_traits.description != nil and access_privilege.accesspoint_traits.description != blank %}
+                                        <br /><small>{{ access_privilege.accesspoint.localized_traits__description }}</small>
+                                      {% endif %}
+                                    </li>
+                                  {% endfor %}
+                                </ul>
+                              {% endif %}
+                            </td>
+
+                            {% if section.settings.display_badge_button == true %}
+                              <td style="padding: 5px; border:1px solid #ecedee; text-align: center; vertical-align: middle;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:separate;" align="center" border="0">
+                                  <tbody>
+                                    <tr>
+                                      {% if category.badge_enabled == true and lg.status == "registered" %}
+                                        <td style="border:none;border-radius:0px;color:#FFFFFF;cursor:auto;padding:6px 15px;word-break:normal" align="center" valign="top" bgcolor="{{button_color}}">
+                                          <a href="{{ lg.badge_url }}" style="display:inline-block;text-decoration:none;background:{{button_color}};color:{{ settings.color_button_text }};font-family:Helvetica;font-size:11px;font-weight:normal;margin:0px;" target="_blank">{{ section.settings.badge_button_label }}</a>
+                                        </td>
+                                      {% else %}
+                                        <td style="border:none;border-radius:0px;color:#333;cursor:auto;padding:6px 15px;word-break:normal" align="center" valign="top">
+                                          <p>-</p>
+                                        </td>
+                                      {% endif %}
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            {% endif %}
+
+                            {% if section.settings.display_edit_button == true %}
+                              <td style="padding: 5px; border:1px solid #ecedee; text-align: center; vertical-align: middle;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:separate;" align="center" border="0">
+                                  <tbody>
+                                    <tr>
+                                      {% if category.custom_registration_form_enabled == true %}
+                                        <td style="border:none;border-radius:0px;color:#FFFFFF;cursor:auto;padding:6px 15px;word-break:normal" align="center" valign="top" bgcolor="{{button_color}}">
+                                          <a href="{{ lg.registration_form_url }}" style="display:inline-block;text-decoration:none;background:{{button_color}};color:{{ settings.color_button_text }};font-family:Helvetica;font-size:11px;font-weight:normal;margin:0px;" target="_blank">{{ section.settings.edit_button_label }}</a>
+                                        </td>
+                                      {% else %}
+                                        <td style="border:none;border-radius:0px;color:#333;cursor:auto;padding:6px 15px;word-break:normal" align="center" valign="top">
+                                          <p>-</p>
+                                        </td>
+                                      {% endif %}
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            {% endif %}
+                          </tr>
+                        {% endfor %}
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--[if mso | IE]>
+                  </td>
+                </tr>
+              </table>
+            <![endif]-->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!--[if mso | IE]>
+        </td>
+      </tr>
+    </table>
+  <![endif]-->
+{% endif %}
+
+<!-- CARTS HISTORY -->
+{% for cart in guest.carts %}
+  {% if cart.payment_status != "FREE" %}
+    <!-- {% increment payable_carts_size %} -->
+  {% endif %}
+{% endfor %}
+
+{% if section.settings.enable_carts_table == true and payable_carts_size > 0 %}
+  <!-- Tax name -->
+  {% assign tax_name = guest.guest_category.localized_taxes_name %}
+  {% assign incl_taxes_text = t.incl %}
+  {% assign excl_taxes_text = t.excl %}
+
+  <!--[if mso | IE]>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
+      <tr>
+        <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+  <![endif]-->
+  <div style="margin:0 auto;max-width:600px;background:#fff;">
+    <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#fff;" align="center" border="0">
+      <tbody>
+        <tr>
+          <td style="text-align:center;vertical-align:top;font-size:0px;padding:0px;">
+            <!--[if mso | IE]>
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="vertical-align:top;width:600px;">
+            <![endif]-->
+            <div aria-labelledby="mj-column-per-100" class="mj-column-per-100" style="vertical-align:top;display:inline-block;font-size:13px;text-align:left;width:100%;">
+              <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                <tbody>
+                  <tr>
+                    <td style="word-break:break-word;background:#FFF;font-size:0px;padding:10px 25px;" align="left" background="#FFF">
+                      {% if section.settings.carts_table_title != blank %}
+                        <table cellpadding="0" cellspacing="0" style="color:#000;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;" width="100%" border="0">
+                          <tr style="text-align:left;">
+                            <th colspan="2" style="padding: 0 0 5px 0;"><h4 style="text-align:left">{{ section.settings.carts_table_title | escape }}</h4></th>
+                          </tr>
+                        </table>
+                      {% endif %}
+
+                      {% for cart in guest.carts %}
+                        {% if cart.total_excl_vat > 0 %}
+                          <!-- commande {% increment no_commande %}-->
+                          {% assign currency_symbol = cart.payment_currency %}
+                          {% if cart.payment_currency == "EUR" %}
+                            {% assign currency_symbol = "€" %}
+                          {% elsif cart.payment_currency == "USD" %}
+                            {% assign currency_symbol = "$" %}
+                          {% endif %}
+
+                          <table cellpadding="0" cellspacing="0" style="color:#000;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;" width="100%" border="0">
+                            <tr style="text-align:left;">
+                              <th colspan="4" style="padding: 0 0 5px 0;">
+                                {% if locale == "fr" %}
+                                  <p>Commande n° {{ no_commande }} {% if cart.payment_date and cart.payment_status == "PAID" %} payée le {{ cart.payment_date | date: "%d/%m/%Y" }}{% else %}(non payée){% endif %}</p>
+                                {% elsif locale == "en" %}
+                                  <p>Order n° {{ no_commande }} {% if cart.payment_date and cart.payment_status == "PAID" %} paid on {{ cart.payment_date | date: "%m/%d/%Y" }}{% else %}(unpaid){% endif %}</p>
+                                {% elsif locale == "es" %}
+                                  <p>Orden n° {{ no_commande }} {% if cart.payment_date and cart.payment_status == "PAID" %} pagada el {{ cart.payment_date | date: "%d/%m/%Y" }}{% else %}(non pagada){% endif %}</p>
+                                {% elsif locale == "it" %}
+                                  <p>Commissione n° {{ no_commande }} {% if cart.payment_date and cart.payment_status == "PAID" %} pagata entro il {{ cart.payment_date | date: "%d/%m/%Y" }}{% else %}(non pagata){% endif %}</p>
+                                {% elsif locale == "de" %}
+                                  <p>Order n° {{ no_commande }} {% if cart.payment_date and cart.payment_status == "PAID" %} betaald der {{ cart.payment_date | date: "%d/%m/%Y" }}{% else %}(onbetaald){% endif %}</p>
+                                {% endif %}
+                                {% if section.settings.display_online_payment_button == true and cart.payment_status != "PAID" and cart.payment_status != "FREE" and guest.guest_category.online_payment_enabled == true %}
+                                  <table role="presentation" cellpadding="0" cellspacing="0" align="center" border="0">
+                                    <tbody>
+                                      <tr>
+                                        <td style="border:none;border-radius:0px;color:#FFFFFF;cursor:auto;padding:6px 15px;word-break:normal" align="center" valign="top" bgcolor="{{button_color}}">
+                                          <a href="{{ cart.online_payment_url }}" style="display:inline-block;text-decoration:none;background:{{button_color}};color:{{ settings.color_button_text }};font-family:Helvetica;font-size:11px;font-weight:normal;margin:0px;" target="_blank">{{ section.settings.online_payment_button_label }}</a>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                {% endif %}
+                              </th>
+                            </tr>
+
+                            <tr style="text-align:center;">
+                              <th style="padding: 0 10px; border:1px solid #ecedee;">{{ section.settings.carts_first_column_header }}</th>
+                              <th style="padding: 0 10px; border:1px solid #ecedee;">{{ t.price }} {{ excl_taxes_text }}</th>
+                              <th style="padding: 0 10px; border:1px solid #ecedee;">{{ tax_name }}</th>
+                              <th style="padding: 0 10px; border:1px solid #ecedee;">{{ t.price }} {{ incl_taxes_text }}</th>
+                            </tr>
+
+                            <!-- Display carts historical information -->
+                            {% for cart_item in cart.cart_items %}
+                              {% if cart_item.price_excl_vat != 0 %}
+                                <tr style="text-align:left;">
+                                  <td style="padding: 5px 10px; border:1px solid #ecedee;"><strong>{{ cart_item.label }}</strong><br /><small>{{ cart_item.description }}</small></td>
+                                  <td style="padding: 5px 10px; border:1px solid #ecedee; text-align:right;">{{ cart_item.price_excl_vat | number_with_precision precision: 2 }} {{ currency_symbol }}</td>
+                                  <td style="padding: 5px 10px; border:1px solid #ecedee; text-align:right;">{{ cart_item.price_incl_vat | minus: cart_item.price_excl_vat | number_with_precision precision: 2 }} {{ currency_symbol }} <small class="text-muted">({{cart_item.vat  | number_with_precision precision: 2, remove_zeros: true }}%)</small></td>
+                                  <td style="padding: 5px 10px; border:1px solid #ecedee; text-align:right;">{{ cart_item.price_incl_vat | number_with_precision precision: 2 }} {{ currency_symbol }}</td>
+                                </tr>
+                              {% endif %}
+                            {% endfor %}
+
+                            <tr style="text-align:left;">
+                              <td style="padding: 5px 10px; border:1px solid #ecedee;"><strong>{{ t.total }}</strong></td>
+                              <td style="padding: 5px 10px; border:1px solid #ecedee; text-align:right;"><strong>{{ cart.total_excl_vat | number_with_precision precision: 2 }} {{ currency_symbol }}</strong></td>
+                              <td style="padding: 5px 10px; border:1px solid #ecedee; text-align:right;"><strong>{{ cart.total_incl_vat | minus: cart.total_excl_vat | number_with_precision precision: 2 }} {{ currency_symbol }}</strong></td>
+                              <td style="padding: 5px 10px; border:1px solid #ecedee; text-align:right;"><strong>{{ cart.total_incl_vat | number_with_precision precision: 2 }} {{ currency_symbol }}</strong></td>
+                            </tr>
+                          </table>
+                        {% endif %}
+                      {% endfor %}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--[if mso | IE]>
+                  </td>
+                </tr>
+              </table>
+            <![endif]-->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!--[if mso | IE]>
+        </td>
+      </tr>
+    </table>
+  <![endif]-->
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Order summary",
+    "name_translations": { "fr": "Récapitulatif de commande" },
+    "class": "index-section",
+    "icon": "fa fa-shopping-cart",
+    "hidden_from_user": false,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Summary of accreditations",
+        "content_translations": { "fr": "Récapitulatif des accréditations" }
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_accreditations_table",
+        "label": "Enable this summary",
+        "label_translations": { "fr": "Activer ce récapitulatif" },
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "accreditations_table_title",
+        "label": "Table title",
+        "label_translations": { "fr": "Titre du tableau" },
+        "default": "Your accreditations",
+        "default_translations": { "fr": "Vos accréditations" },
+        "show_if": {
+          "source_id": "enable_accreditations_table",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "accesspoint_trait_picker",
+        "id": "label_trait_key",
+        "label": "Field used as label",
+        "label_translations": { "fr": "Champ utilisé comme libellé" },
+        "default": "",
+        "info": "By default, the checkin point label will be displayed",
+        "info_translations": { "fr": "Par défaut, le libellé du point de check-in sera affiché." },
+        "show_if": {
+          "source_id": "enable_accreditations_table",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "accesspoint_trait_picker",
+        "id": "filter_trait_key",
+        "label": "Filter by",
+        "label_translations": { "fr": "Filtrer par" },
+        "default": "",
+        "info": "If no filter, every accreditation wil be displayed",
+        "info_translations": { "fr": "Si aucun filtre, toutes les accréditations du participant seront affichées." },
+        "show_if": {
+          "source_id": "enable_accreditations_table",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "text",
+        "id": "filter_trait_value",
+        "label": "Filter value",
+        "label_translations": { "fr": "Valeur du filtre" },
+        "default": "",
+        "show_if": {
+          "source_id": "filter_trait_key",
+          "operator": "!=",
+          "value": ""
+        }
+      },
+      {
+        "type": "accesspoint_trait_picker",
+        "id": "sort_traits_key",
+        "label": "Sort by",
+        "label_translations": { "fr": "Trier par" },
+        "default": "",
+        "info": "By default, accreditations are ordered by checkin point name",
+        "info_translations": { "fr": "Par défaut, les accréditations sont ordonnées selon le nom du point de check-in." },
+        "show_if": {
+          "source_id": "enable_accreditations_table",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "header",
+        "content": "Summary of accompanying people / tickets",
+        "content_translations": { "fr": "Récapitulatif des accompagnants / tickets" }
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_linked_guests_table",
+        "label": "Enable this summary",
+        "label_translations": { "fr": "Activer ce récapitulatif" },
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "linked_guests_table_title",
+        "label": "Table title",
+        "label_translations": { "fr": "Titre du tableau" },
+        "default": "Your tickets",
+        "default_translations": { "fr": "Vos tickets" },
+        "show_if": {
+          "source_id": "enable_linked_guests_table",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "guest_field_picker",
+        "id": "identity_field",
+        "label": "Field for name",
+        "label_translations": { "fr": "Champ pour le nom" },
+        "default": "identity",
+        "show_if": {
+          "source_id": "enable_linked_guests_table",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "display_category_name",
+        "label": "Display the name of registration category",
+        "label_translations": { "fr": "Afficher le nom de la catégorie d'inscription" },
+        "default": true,
+        "info": "You can customize this information by adding metadata 'label' to category.",
+        "info_translations": { "fr": "Il est possible de personnaliser cette information en ajoutant la metadata 'label' à la catégorie." },
+        "show_if": {
+          "source_id": "enable_linked_guests_table",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "display_category_description",
+        "label": "Display the description of registration category",
+        "label_translations": { "fr": "Afficher la description de la catégorie d'inscription" },
+        "default": true,
+        "info": "You can customize this information by adding metadata 'description' to category.",
+        "info_translations": { "fr": "Il est possible de personnaliser cette information en ajoutant la metadata 'description' à la catégorie." },
+        "show_if": {
+          "source_id": "enable_linked_guests_table",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "display_access_privileges",
+        "label": "Display extra accreditations",
+        "label_translations": { "fr": "Afficher les accréditations supplémentaires" },
+        "default": true,
+        "info": "You can customize this information by adding metadata 'label' and 'description' to check-in points.",
+        "info_translations": { "fr": "Il est possible de personnaliser ces informations en ajoutant les metadata 'label' et 'description' aux points de check-in." },
+        "show_if": {
+          "source_id": "enable_linked_guests_table",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "display_badge_button",
+        "label": "Display badge download button",
+        "label_translations": { "fr": "Afficher le bouton de téléchargement du badge" },
+        "default": true,
+        "show_if": {
+          "source_id": "enable_linked_guests_table",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "text",
+        "id": "badge_button_label",
+        "label": "Badge button label",
+        "label_translations": { "fr": "Libellé du bouton de badge" },
+        "default": "TICKET",
+        "default_translations": { "fr": "BILLET" },
+        "show_if": {
+          "source_id": "display_badge_button",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "display_edit_button",
+        "label": "Display edit button",
+        "label_translations": { "fr": "Afficher le bouton d'édition'" },
+        "default": true,
+        "show_if": {
+          "source_id": "enable_linked_guests_table",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "text",
+        "id": "edit_button_label",
+        "label": "Edit button label",
+        "label_translations": { "fr": "Libellé du bouton d'édition" },
+        "default": "Edit this registration",
+        "default_translations": { "fr": "Éditer cette inscription" },
+        "show_if": {
+          "source_id": "display_edit_button",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "header",
+        "content": "Summary of carts",
+        "content_translations": { "fr": "Récapitulatif des paniers de la commande" }
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_carts_table",
+        "label": "Enable this summary",
+        "label_translations": { "fr": "Activer ce récapitulatif" },
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "carts_table_title",
+        "label": "Table title",
+        "label_translations": { "fr": "Titre du tableau" },
+        "default": "Your orders",
+        "default_translations": { "fr": "Vos commandes" },
+        "show_if": {
+          "source_id": "enable_carts_table",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "text",
+        "id": "carts_first_column_header",
+        "label": "First column label",
+        "label_translations": { "fr": "Entête de la 1è colonne" },
+        "default": "Services",
+        "default_translations": { "fr": "Prestations" },
+        "show_if": {
+          "source_id": "enable_carts_table",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "display_online_payment_button",
+        "label": "Display online payment button",
+        "label_translations": { "fr": "Afficher le bouton de paiement en ligne" },
+        "default": false,
+        "info": "It will displayed for unpaid orders and if online payment is enabled.",
+        "info_translations": { "fr": "Il sera affiché en cas de paiment non produit et si le paiment en ligne est activé." },
+        "show_if": {
+          "source_id": "enable_carts_table",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "text",
+        "id": "online_payment_button_label",
+        "label": "Payment button link",
+        "label_translations": { "fr": "Libellé du bouton de paiement" },
+        "default": "Pay online",
+        "default_translations": { "fr": "Payer en ligne" },
+        "show_if": {
+          "source_id": "display_online_payment_button",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "header",
+        "content": "Appearance",
+        "content_translations": { "fr": "Apparence" }
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_custom_css",
+        "label": "Apply a custom style",
+        "label_translations": { "fr": "Appliquer un style personnalisé" },
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "button_color",
+        "label": "Button color",
+        "label_translations": { "fr": "Couleur du bouton" },
+        "show_if": {
+          "source_id": "enable_custom_css",
+          "operator": "==",
+          "value": true
+        },
+        "default": "#000"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Order summary",
+        "name_translations": { "fr": "Récapitulatif de commande" }
+      }
+    ]
+  }
+{% endschema %}

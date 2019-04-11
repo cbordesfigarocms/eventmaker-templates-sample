@@ -1,0 +1,148 @@
+{% if section.settings.link_type == "internal_link" %}
+  {% capture share_link %}{% website_url section.settings.website_page_url %}{% endcapture %}
+{% elsif section.settings.link_type == "external_link" %}
+  {% assign share_link = section.settings.custom_share_link | parse_liquid %}
+{% endif %}
+
+{% case locale %}
+  {% when 'fr' %}
+    {% assign network_locale = 'fr_FR' %}
+  {% when 'en' %}
+    {% assign network_locale = 'en_EN' %}
+  {% when 'es' %}
+    {% assign network_locale = 'es_ES' %}
+  {% when 'it' %}
+    {% assign network_locale = 'it_IT' %}
+  {% when 'de' %}
+    {% assign network_locale = 'de_DE' %} 
+{% endcase %}
+
+<div class="container {{ settings.spacing }}" data-section-id="{{ section.id }}" data-section-type="social-networks-sharing">
+  {% if section.settings.title != blank %}
+    <h2 class="title text-center down-s">{{ section.settings.title }}</h1>
+  {% endif %}
+
+  <div class="text-center">
+
+    {% if section.settings.share_on_facebook == true %}
+      <div class="social-button"  id="share-facebook">
+        <div id="fb-root"></div>
+        <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id;js.src = '//connect.facebook.net/{{ network_locale }}/sdk.js#xfbml=1&version=v3.2&appId=432319460123153';fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));</script>
+        <div class="fb-share-button" data-href="{{ share_link }}?utm_medium=social&utm_source=facebook&utm_campaign=registration_form" data-width="150" data-layout="button_count" data-action="recommend" data-show-faces="false" data-send="false" data-size="large"></div>
+      </div>
+    {% endif %}
+
+    {% if section.settings.share_on_twitter == true %}
+      <div class="social-button" id="share-twitter">
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/\Ahttp:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ share_link }}?utm_medium=social&utm_source=twitter&utm_campaign=registration_form" data-text="{{ section.settings.tweet_content | parse_liquid }}" data-lang="{{ locale }}" data-count="none" data-size="large">Tweet</a>
+      </div>
+    {% endif %}
+
+    {% if section.settings.share_on_linkedin == true %}
+      <div class="social-button" id="share-linkedin">
+        <script src="//platform.linkedin.com/in.js" type="text/javascript">lang: {{ network_locale }}</script>
+        <script type="IN/Share" data-url="{{ share_link }}?utm_medium=social&utm_source=linkedin&utm_campaign=registration_form" data-width="130"></script>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Share on social networks",
+    "name_translations": { "fr": "Partage réseaux sociaux" },
+    "icon": "fa fa-facebook-square",
+    "hidden_from_user": false,
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "label_translations": { "fr": "Titre" },
+        "default": "Share your registration on your social networks",
+        "default_translations": { "fr": "Partagez votre inscription sur vos réseaux" }
+      },
+      {
+        "type": "checkbox",
+        "id": "share_on_facebook",
+        "label": "Share on Facebook",
+        "label_translations": { "fr": "Activer partage sur Facebook" },
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "share_on_twitter",
+        "label": "Share on Twitter",
+        "label_translations": { "fr": "Activer partage sur Twitter" },
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "share_on_linkedin",
+        "label": "Share on LinkedIn",
+        "label_translations": { "fr": "Activer partage sur LinkedIn" },
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "link_type",
+        "label": "Type of link to share",
+        "label_translations": { "fr": "Type de lien à partager" },
+        "default": "internal_link",
+        "options": [
+          {
+            "value": "internal_link",
+            "label": "Website page",
+            "label_translations": { "fr": "Page de votre site" }
+          },
+          {
+            "value": "external_link",
+            "label": "External link",
+            "label_translations": { "fr": "Lien externe" }
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "custom_share_link",
+        "label": "Custom share link",
+        "label_translations": { "fr": "Lien de partage personnalisé" },
+        "show_if": {
+          "source_id": "link_type",
+          "operator": "==",
+          "value": "external_link"
+        }
+      },
+      {
+        "type": "website_page_picker",
+        "id": "website_page_url",
+        "label": "Website page to share",
+        "label_translations": { "fr": "Page de votre site à partager" },
+        "show_if": {
+          "source_id": "link_type",
+          "operator": "==",
+          "value": "internal_link"
+        }
+      },
+      {
+        "type": "paragraph",
+        "id": "tweet_content",
+        "label": "Tweet content",
+        "label_translations": { "fr": "Contenu du tweet" },
+        "show_if": {
+          "source_id": "share_on_twitter",
+          "operator": "==",
+          "value": true
+        }
+      }
+    ],
+    "presets": [
+      {
+        "name": "Share on social networks",
+        "name_translations": { "fr": "Partage réseaux sociaux" }
+      }
+    ]
+  }
+{% endschema %}

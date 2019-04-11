@@ -1,0 +1,176 @@
+{% assign base_url_video = "" %}
+{% assign time = "" %}
+{% assign autoplay = "" %}
+{% assign auto_subtitles = "" %}
+{% assign code_video = "" %}
+
+<div class="container {{ settings.spacing }}" data-section-id="{{ section.id }}" data-section-type="video">
+  {% if section.settings.title != blank %}
+    <div class="section-header text-center down-s">
+      <h2>{{ section.settings.title | escape }}</h2>
+    </div>
+  {% endif %}
+
+  {% if section.settings.text.html.size > 6 %}
+    <div class="h2-subtitle text-center down-s">{{ section.settings.text.html | parse_liquid }}</div>
+  {% endif %}
+
+  {% if section.settings.video_source == "youtube" %}
+
+    {% assign base_url_video = "https://www.youtube.com/embed/" %}
+
+    {% if section.settings.url_video contains "youtube.com" %}
+      {% assign code_video = section.settings.url_video | remove: "https://www.youtube.com/watch?v=" %}
+    {% elsif section.settings.url_video contains "youtu.be" %}
+      {% assign code_video = section.settings.url_video | remove: "https://youtu.be/" | split: "?" %}
+      {% assign time = code_video[1] | replace: "t", "start" %}
+      {% assign code_video = code_video[0] | append: "?" | append: time %}
+    {% endif %}
+
+    {% if section.settings.yt_autoplay == true %}
+      {% if code_video contains "?" %}
+        {% assign autoplay = "&autoplay=1" %}
+      {% else %}
+        {% assign autoplay = "?&autoplay=1" %}
+      {% endif %}
+    {% endif %}
+
+    {% assign url_video = base_url_video | append: code_video | append: autoplay %}
+
+    <iframe class="video-iframe col-xs-12 col-md-8 col-md-offset-2" src="{{url_video}}" style="border: none; overflow: auto;" allowfullscreen="" id="iFrameResizer0" scrolling="yes" {% if section.settings.yt_autoplay == true %}allow="autoplay"{% endif %}></iframe>
+
+  {% elsif section.settings.video_source == "dailymotion" %}
+
+    {% assign base_url_video = "https://www.dailymotion.com/embed/video/" %}
+
+    {% if section.settings.dm_autoplay == true %}
+      {% assign autoplay = "?autoplay=1" %}
+    {% endif %}
+
+    {% if section.settings.url_video contains "dailymotion.com" %}
+      {% assign code_video = section.settings.url_video | remove: "https://www.dailymotion.com/video/" %}
+    {% elsif section.settings.url_video contains "dai.ly" %}
+      {% assign code_video = section.settings.url_video | remove: "https://dai.ly/" %}
+    {% endif %}
+
+    {% assign url_video = base_url_video | append: code_video | append: autoplay %}
+    <iframe frameborder="0" class="video-iframe col-xs-12 col-md-8 col-md-offset-2" src="{{url_video}}" allowfullscreen="" allow="autoplay"></iframe>
+
+  {% elsif section.settings.video_source == "vimeo" %}
+
+    {% assign base_url_video = "https://player.vimeo.com/video/" %}
+
+    {% assign code_video = section.settings.url_video | remove: "https://vimeo.com/" %}
+
+    {% assign url_video = base_url_video | append: code_video %}
+
+    <iframe src="{{url_video}}" class="video-iframe col-xs-12 col-md-8 col-md-offset-2" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+  {% endif %}
+</div>
+
+{% schema %}
+  {
+    "name": "Video",
+    "name_translations": { "fr": "Vidéo" },
+    "class": "index-section",
+    "icon": "fa fa-video-camera",
+    "hidden_from_user": false,
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "label_translations": { "fr": "Titre" },
+        "default": "Title",
+        "default_translations": { "fr": "Titre" }
+      },
+      {
+        "type": "rte",
+        "id": "text",
+        "label": "Text",
+        "label_translations": { "fr": "Texte" },
+        "default": "Cum autem commodis intervallata temporibus convivia longa et noxia coeperint autem commodis intervallata temporibus convivia longa et noxia coeperint autem commodis intervallata temporibus convivia longa et noxia coeperint."
+      },
+      {
+        "type": "select",
+        "id": "video_source",
+        "label": "Video from",
+        "label_translations": { "fr": "Vidéo venant de" },
+        "default": "",
+        "options": [
+          {
+            "value": "youtube",
+            "label": "Youtube",
+            "label_translations": { "fr": "Youtube" }
+          },
+          {
+            "value": "dailymotion",
+            "label": "Dailymotion",
+            "label_translations": { "fr": "Dailymotion" }
+          },
+          {
+            "value": "vimeo",
+            "label": "Vimeo",
+            "label_translations": { "fr": "Vimeo" }
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "url_video",
+        "label": "Video URL",
+        "label_translations": { "fr": "URL de la vidéo" }
+      },
+      {
+        "type": "header",
+        "content": "Youtube advanced settings",
+        "content_translations": { "fr": "Paramètres avancés de Youtube" },
+        "show_if": {
+          "source_id": "video_source",
+          "operator": "==",
+          "value": "youtube"
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "yt_autoplay",
+        "label": "Start playback automatically",
+        "label_translations": { "fr": "Lancer automatiquement la lecture" },
+        "default": false,
+        "show_if": {
+          "source_id": "video_source",
+          "operator": "==",
+          "value": "youtube"
+        }
+      },
+      {
+        "type": "header",
+        "content": "Dailymotion advanced settings",
+        "content_translations": { "fr": "Paramètres avancés de Dailymotion" },
+        "show_if": {
+          "source_id": "video_source",
+          "operator": "==",
+          "value": "dailymotion"
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "dm_autoplay",
+        "label": "Start playback automatically",
+        "label_translations": { "fr": "Lancer automatiquement la lecture" },
+        "default": false,
+        "show_if": {
+          "source_id": "video_source",
+          "operator": "==",
+          "value": "dailymotion"
+        }
+      }
+    ],
+    "presets": [
+      {
+        "name": "Video",
+        "name_translations": { "fr": "Vidéo" }
+      }
+    ]
+  }
+{% endschema %}

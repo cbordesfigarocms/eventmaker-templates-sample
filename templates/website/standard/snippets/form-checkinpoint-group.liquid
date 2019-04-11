@@ -1,0 +1,65 @@
+<div class="form-group {% if form_item.options.handle_time_slot_conflicts %}programm-checkbox{% endif %}" {{ conditional_display }}>
+  <label class="control-label" {{ required }}>{{ form_item.localized_label }}</label>
+
+  {% assign is_radio_group = false %}
+  {% if form_item.options.uniq_option and form_item.options.uniq_option == true %}
+    {% assign is_radio_group = true %}
+  {% endif %}
+
+  {% if form_item.options.advanced_mode == true %}
+
+    {% assign with_trait_label = false %}
+    {% capture label_trait %}{% for label in form_item.options.override_label %}{{ label[0] }}{% endfor %}{% endcapture %}
+    {% if label_trait != blank %}
+      {% assign with_trait_label = true %}
+    {% endif %}
+
+    {% capture rank_trait %}{% for order in form_item.options.order %}{{ order[0] }}{% endfor %}{% endcapture %}
+    {% assign sort_field = 'name' %}
+    {% if rank_trait != blank %}
+      {% capture sort_field %}trait_{{ rank_trait }}{% endcapture %}
+    {% endif %}
+
+    {% assign sorted_checkin_points = checkin_points | sort: sort_field %}
+    {% for cp in sorted_checkin_points %}
+      {% if cp.traits[form_item.options.filter.key] == form_item.options.filter.value %}
+        {% assign label = nil %}
+        {% if with_trait_label %}
+          {% assign key = "localized_traits__" | append: label_trait %}
+          {% assign label = cp[key] %}
+        {% endif %}
+        {% if label == blank or label == nil %}
+          {% assign label = cp.localized_name %}
+        {% endif %}
+        {% if is_radio_group %}
+          {% checkin_point cp.id, label: label, display_remaining: form_item.options.display_quota, radio_group: form_item.id, exclude_vat: form_item.options.display_price_excl_vat %}
+        {% else %}
+          {% checkin_point cp.id, label: label, display_remaining: form_item.options.display_quota, exclude_vat: form_item.options.display_price_excl_vat %}
+        {% endif %}
+
+        {% if form_item.options.handle_time_slot_conflicts %}
+          <span data-starttime="{{ cp.start_date | date: '%H%M' }}" data-endtime="{{ cp.end_date | date: '%H%M' }}"></span>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+  {% else %}
+    {% for option in form_item.form_item_options %}
+      {% if is_radio_group %}
+        {% checkin_point option.key, label: option.localized_label, checked: option.value, display_remaining: form_item.options.display_quota, radio_group: form_item.id, exclude_vat: form_item.options.display_price_excl_vat %}
+      {% else %}
+        {% checkin_point option.key, label: option.localized_label, checked: option.value, display_remaining: form_item.options.display_quota, exclude_vat: form_item.options.display_price_excl_vat %}
+      {% endif %}
+
+      {% if form_item.options.handle_time_slot_conflicts %}
+        {% for cp in checkin_points %}
+          {% if cp.id == option.key %}
+            <span data-starttime="{{ cp.start_date | date: '%H%M' }}" data-endtime="{{ cp.end_date | date: '%H%M' }}"></span>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {{ help_block }}
+</div>

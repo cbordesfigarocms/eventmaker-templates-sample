@@ -1,0 +1,3 @@
+{% capture field_value %}{% if guest.guest_metadata[form_item.key] != nil %}{{ guest.guest_metadata[form_item.key] }}{% else %}{{ guest[form_item.key] }}{% endif %}{% endcapture %}
+
+<input type="hidden" name="{% guest_field_name form_item.key %}" class="form-control" {% if prefill_from != blank %}data-copy-from="{{prefill_from}}"{% endif %} value="{% if field_value != blank %}{{ field_value }}{% else %}{{ form_item.options['default_value'] }}{% endif %}" />

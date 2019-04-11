@@ -1,0 +1,241 @@
+{% if section.settings.enable_custom_css == true %}
+  {% capture main_color %}{{ section.settings.main_color }}{% endcapture %}
+{% else %}
+  {% capture main_color %}{{ settings.color_button }}{% endcapture %}
+{% endif %}
+
+<style type="text/css">
+  .form-actions .btn-primary, .btn-link.add-linked-guest, .btn-link.remove-linked-guest { background-color: {{ main_color }}; }
+  .form-actions .btn-primary:hover, .form-actions .btn-primary:focus, .form-actions .btn-primary:active, .btn-link.add-linked-guest:hover, .btn-link.add-linked-guest:focus, .btn-link.add-linked-guest:active, .btn-link.remove-linked-guest:hover, .btn-link.remove-linked-guest:focus, .btn-link.remove-linked-guest:active { background-color: {{ main_color }}; }
+  .nav-wizard > li.active > a .badge.badge-step { color: {{ main_color }}; }
+  .nav-wizard > li.active > a { background-color: {{ main_color }}; } .nav-wizard > li.active > a:after { border-left-color: {{ main_color }}; }
+</style>
+
+<div data-section-id="{{ section.id }}" data-section-type="registration-form">
+  {% if section.settings.guest_category_id != blank %}
+    <div class="container {{ settings.spacing }}">
+      <div class="row">
+        <div class="col-sm-12">
+          <div style="max-width: {{ section.settings.form_width }}px" class="center-block">
+            {% if section.settings.information_bar and url_params['step'] != 'confirmation' %}
+              <div class="announcement-bar announcement-private announcement-form" style="background-color: {{ section.settings.information_bar_color_bg }}">
+                <p class="announcement-bar__message text-center" style="color: {{ section.settings.information_bar_color_text }};">
+                  {{ t.form_current_guest }} <strong>{{guest.identity}}</strong>. {{ t.register_someone_else }} <a href="/{{page.path_name}}?force_new_registration=true"  style="color: {{ section.settings.information_bar_color_text }}; text-decoration: underline;">{{ t.click_here }}</a>.
+                </p>
+              </div>
+            {% endif %}
+
+            {% registration_form guest_category_id: section.settings.guest_category_id %}
+              {% if guest.errors != blank %}
+                {% include 'form-errors', guest: guest, title: t.form_contains_errors %}
+              {% endif %}
+
+              {% assign local_switch_col = "col-sm-2" %}
+
+              {% if guest_category.payment_enabled %}
+                {% assign local_switch_col = "col-sm-4" %}
+                <div class="row">
+                  <div class="col-sm-8">
+              {% endif %}
+
+              <div class="ticket-container">
+
+              {% if current_step.steps_in_execution_path.size > 1 %}
+                {% include 'form-breadcrumbs' %}
+              {% endif %}
+
+                {% if layout_name == "embed" and event.frontend_locales_to_switch.size > 1 and request_method == "GET" %}
+                  <div class="row down-s">
+                    <div class="{{ local_switch_col }} pull-right">
+                      <select class="form-control" id="locale_switch" autocomplete="new-password">
+                        {% for available_locale in event.frontend_locales_to_switch %}
+                          {% assign selected = nil %}
+                          {% if available_locale.code == locale %}
+                            {% assign selected = 'selected' %}
+                          {% endif %}
+                          <option value="{{available_locale.code}}" {{ selected }}>{{ available_locale.flag }} {{ available_locale.original_label }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                {% endif %}
+
+                {% if guest_category.ticketing? %}
+                 {% include 'form-tickets-selector' %}
+                {% endif %}
+
+                {% assign current_step_fields = '' %}
+
+                {% for form_item in form_items %}
+                  {% if form_item.type != 'checkbox_group' %}
+                    {% if form_item.key != blank and guest.linked_guest? == false %}
+                      {% assign current_step_fields = current_step_fields | append: form_item.key | append: ',' %}
+                    {% endif %}
+                  {% else %}
+                    {% for option in form_item.form_item_options %}
+                      {% if option.key != blank and guest.linked_guest? == false %}
+                        {% assign current_step_fields = current_step_fields | append: option.key | append: ',' %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                {% endfor %}
+
+                {% for form_item in form_items %}
+                  {% include 'form-item' %}
+                {% endfor %}
+
+                {% capture submit_label %}
+                {% if current_step.submit_label == blank %}
+                  {% if current_step.is_final_step? %}
+                    {{ t.send }}
+                  {% else %}
+                    {{ t.next_step }}
+                  {% endif %}
+                {% else %}
+                  {{ current_step.localized_submit_label }}
+                {% endif %}
+              {% endcapture %}
+              <br>
+              <div class="form-actions text-right">
+                <input type="submit" value="{{ submit_label }}" class="btn btn-primary" />
+              </div>
+
+              </div>
+
+              {% if guest_category.payment_enabled %}
+                  </div>
+
+                  <div class="col-sm-4">
+                    {% include 'form-cart' %}
+                  </div>
+                </div>
+              {% endif %}
+            {% endregistration_form %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-warning">Aucun formulaire n'est configuré sur cette page</div>
+  {% endif %}
+</div>
+
+{% schema %}
+  {
+    "name": "Registration form",
+    "name_translations": { "fr": "Formulaire d'inscription" },
+    "class": "index-section",
+    "icon": "fa fa-file-text",
+    "hidden_from_user": true,
+    "lockable": true,
+    "settings": [
+      {
+        "type": "guest_category_picker",
+        "id": "guest_category_id",
+        "label": "Category form",
+        "label_translations": { "fr": "Formulaire de la Catégorie" },
+        "lockable": true,
+        "enable_select_another_form": true
+      },
+      {
+        "type": "header",
+        "content": "Appearance",
+        "content_translations": { "fr": "Apparence" }
+      },
+      {
+        "type": "range",
+        "id": "form_width",
+        "label": "Form width",
+        "label_translations": { "fr": "Largeur du formulaire" },
+        "min": 500,
+        "max": 1200,
+        "step": 5,
+        "unit": "px",
+        "default": 900
+      },
+      {
+        "type": "select",
+        "id": "step_number_class",
+        "label": "Step number",
+        "label_translations": { "fr": "Numéro d'étape" },
+        "default": "no-badge",
+        "options": [
+          {
+            "label": "Hidden",
+            "label_translations": { "fr": "Caché" },
+            "value": "no-badge"
+          },
+          {
+            "label": "Before",
+            "label_translations": { "fr": "Devant" },
+            "value": ""
+          },
+          {
+            "label": "Above",
+            "label_translations": { "fr": "Au dessus" },
+            "value": "badge-up"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_custom_css",
+        "label": "Apply a custom style",
+        "label_translations": { "fr": "Appliquer un style personnalisé" },
+        "default": false,
+        "info": "By checking the previous checkbox, website's main appareance settings will be replaced with the following settings",
+        "info_translations": { "fr" : "En cochant la case précédente, les configurations de l'apparence générale du site web seront remplacées par les configurations suivantes" }
+      },
+      {
+        "type": "color",
+        "id": "main_color",
+        "label": "Main color",
+        "label_translations": { "fr": "Couleur principale" },
+        "show_if": {
+          "source_id": "enable_custom_css",
+          "operator": "==",
+          "value": true
+        },
+        "default": "#000"
+      },
+      {
+        "type": "header",
+        "content": "Advanced settings",
+        "content_translations": { "fr": "Paramètres avancés" }
+      },
+      {
+        "type": "checkbox",
+        "id": "information_bar",
+        "label": "Information Bar",
+        "label_translations": { "fr": "Barre d'informations" },
+        "default": false,
+        "info": "The guest identity will be displayed and it will be proposed registering a new guest",
+        "info_translations": { "fr" : "L'identité du participant inscrit y sera indiquée et proposera d'inscrire une nouvelle personne" }
+      },
+      {
+        "type": "color",
+        "id": "information_bar_color_bg",
+        "label": "Information bar color",
+        "label_translations": { "fr": "Couleur de la barre" },
+        "show_if": {
+          "source_id": "information_bar",
+          "operator": "==",
+          "value": true
+        },
+        "default": "#7796a8"
+      },
+      {
+        "type": "color",
+        "id": "information_bar_color_text",
+        "label": "Information bar text color",
+        "label_translations": { "fr": "Couleur du texte de la barre" },
+        "show_if": {
+          "source_id": "information_bar",
+          "operator": "==",
+          "value": true
+        },
+        "default": "#fff"
+      }
+    ]
+  }
+{% endschema %}

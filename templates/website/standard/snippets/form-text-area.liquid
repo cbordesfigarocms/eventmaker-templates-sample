@@ -1,0 +1,7 @@
+{% capture field_value %}{% if guest.guest_metadata[form_item.key] != nil %}{{ guest.guest_metadata[form_item.key] }}{% else %}{{ guest[form_item.key] }}{% endif %}{% endcapture %}
+<div class="form-group" {{ conditional_display }}>
+  <label class="control-label" {{ required }}>{{ form_item.localized_label }}</label>
+  <textarea name="{% guest_field_name form_item.key %}" class="form-control" {% if prefill_from != blank %}data-copy-from="{{prefill_from}}"{% endif %} {{ required }} {{ required_if }} {% if form_item.options['readonly'] %}readonly{% endif %}>{{ field_value or form_item.options.placeholder }}</textarea>
+
+  {{ help_block }}
+</div>

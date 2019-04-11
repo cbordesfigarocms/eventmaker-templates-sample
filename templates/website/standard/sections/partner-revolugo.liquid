@@ -1,0 +1,76 @@
+{% if locale == "fr" %} {% assign local_lang = locale %} {% else %} {% assign local_lang == "en" %} {% endif %}
+<div class="container {{ settings.spacing }}" data-section-id="{{ section.id }}" data-section-type="images-list">
+
+  {% if section.settings.title != blank %}
+    <div class="section-header text-center down-s">
+      <h2 >{{ section.settings.title | escape }}</h2>
+    </div>
+  {% endif %}
+  {% if section.settings.tracking_id != blank %}
+    <script
+    id="revolugo-widget"
+    src="https://widget.revolugo.com/embed/"
+    data-tid="{{section.settings.tracking_id}}"
+    data-latitude='{{section.settings.latitude}}'
+    data-longitude='{{section.settings.longitude}}'
+    data-start='{{event.start_date | date: "%Y-%m-%d"}}'
+    data-name="{{event.title | escape}}"
+    data-descr="{{event.description | escape}}"
+    data-address="{{event.address | escape}}"
+    data-end='{{event.end_date | date: "%Y-%m-%d"}}'
+    data-check-in-date='{{event.start_date | date: "%Y-%m-%d"}}'
+    data-check-out-date='{{event.end_date | date: "%Y-%m-%d"}}'
+    data-marker=""
+    data-logo="{{event.photo}}"
+    data-height=""
+    data-h-ids=""
+    data-h-s-ids=""
+    data-lang="{{local_lang}}"
+    ></script>
+  {% endif %}
+</div>
+
+{% schema %}
+  {
+    "name": "Hotel Finder - Revolugo",
+    "name_translations": { "fr": "Recherche d'Hôtel - Revolugo" },
+    "class": "index-section",
+    "icon": "fa fa-hotel",
+    "hidden_from_user": false,
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "label_translations": { "fr": "Titre" },
+        "default": "Find a hotel",
+        "default_translations": { "fr": "Trouver un hôtel" }
+      },
+      {
+        "type": "text",
+        "id": "tracking_id",
+        "label": "Revolugo Id",
+        "label_translations": { "fr": "Identifiant Revolugo" },
+        "info": "From revolugo.com service",
+        "info_translations": { "fr": "Provenant du service revolugo.com" }
+      },
+      {
+        "type": "header",
+        "content": "Event coordinates",
+        "content_translations": { "fr": "Coordonnées de l'événement" }
+      },
+      {
+        "type": "text",
+        "id": "longitude",
+        "label": "Longitude",
+        "label_translations": { "fr": "Longitude" }
+      },
+      {
+        "type": "text",
+        "id": "latitude",
+        "label": "Latitude",
+        "label_translations": { "fr": "Latitude" }
+      }
+    ]
+  }
+{% endschema %}

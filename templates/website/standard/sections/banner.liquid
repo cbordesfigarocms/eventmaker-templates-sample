@@ -1,0 +1,103 @@
+{% assign width_class = "col-sm-" | append: section.settings.width %}
+
+{% if section.settings.alignment == 'center' %}
+  {% case section.settings.width %}
+    {% when '12' %}
+      {% assign block_alignment_class = "" %}
+    {% when '8' %}
+      {% assign block_alignment_class = " col-sm-offset-2" %}
+    {% when '4' %}
+      {% assign block_alignment_class = " col-sm-offset-4" %}
+  {% endcase %}
+  {% assign img_alignment_class = "center-block" %}
+{% else %}
+  {% assign block_alignment_class = "" %}
+  {% if section.settings.width != '12' %}
+    {% assign block_alignment_class = "pull-" | append: section.settings.alignment %}
+  {% endif %}
+  {% assign img_alignment_class = "pull-" | append: section.settings.alignment %}
+{% endif %}
+
+<div class="container {{ settings.spacing }}" data-section-id="{{ section.id }}" data-section-type="banner">
+  <div class="row">
+    <div class="col-xs-12 {{ width_class }} {{ block_alignment_class }}">
+      {% assign image_url = section.settings.image %}
+      {% if section.settings.image == blank %}
+        {% assign image_url = "https://via.placeholder.com/1280x300/F0F0F0/888888/?text=Eventmaker.io" %}
+      {% endif %}
+      <img src="{{ image_url }}" class="img-responsive {{ img_alignment_class }}" alt="Image placeholder" />
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Banner / Single image",
+    "name_translations": { "fr": "Bannière / Image seule" },
+    "class": "index-section",
+    "icon": "fa fa-picture-o",
+    "hidden_from_user": false,
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image",
+        "default": ""
+      },
+      {
+        "type": "select",
+        "id": "width",
+        "label": "Image width",
+        "label_translations": { "fr": "Largeur de l'image" },
+        "default": "12",
+        "options": [
+          {
+            "value": "12",
+            "label": "Large",
+            "label_translations": { "fr": "Grand" }
+          },
+          {
+            "value": "8",
+            "label": "Medium",
+            "label_translations": { "fr": "Moyen" }
+          },
+          {
+            "value": "4",
+            "label": "Small",
+            "label_translations": { "fr": "Petit" }
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "alignment",
+        "label": "Image alignment",
+        "label_translations": { "fr": "Alignement de l'image" },
+        "default": "center",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left",
+            "label_translations": { "fr": "Gauche" }
+          },
+          {
+            "value": "center",
+            "label": "Center",
+            "label_translations": { "fr": "Milieu" }
+          },
+          {
+            "value": "right",
+            "label": "Right",
+            "label_translations": { "fr": "Droite" }
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Banner / Single image",
+        "name_translations": { "fr": "Bannière / Image seule" }
+      }
+    ]
+  }
+{% endschema %}

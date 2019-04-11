@@ -1,0 +1,49 @@
+{% if guest.qrcode_image_url != blank and guest.qrcode_image_url != nil %}
+  <div class="container {{ settings.spacing }}" data-section-id="{{ section.id }}" data-section-type="qrcode">
+    <div class="row">
+      <div class="col-sm-4 col-sm-offset-4 col-xs-12">
+        <img src="{{ guest.qrcode_image_url }}" class="img-responsive center-block" alt="{{ guest.identity }}" />
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "QRCode",
+    "name_translations": { "fr": "QRCode" },
+    "icon": "fa fa-qrcode",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Advanced settings",
+        "content_translations": { "fr": "Paramètres avancés" }
+      },
+      {
+        "type": "checkbox",
+        "id": "private",
+        "label": "Display only for a particular segment",
+        "label_translations": { "fr": "N'afficher que pour un segment particulier" },
+        "default": false
+      },
+      {
+        "type": "segments_picker",
+        "id": "segments",
+        "label": "Choose a segment to filter on",
+        "label_translations": { "fr": "Choisissez le segment sur lequel filtrer" },
+        "show_if": {
+          "source_id": "private",
+          "operator": "==",
+          "value": true
+        },
+        "default": []
+      }
+    ],
+    "presets": [
+      {
+        "name": "QRCode",
+        "name_translations": { "fr": "QRCode" }
+      }
+    ]
+  }
+{% endschema %}

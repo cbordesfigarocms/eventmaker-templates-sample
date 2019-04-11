@@ -1,0 +1,14 @@
+{% unless guest.linked_guest? %}
+  <div class="form-group has-feedback" {{ conditional_display }}>
+    {% if form_item.localized_label != blank %}
+      <label class="control-label" {{ required }}>{{ form_item.localized_label }}</label>
+    {% endif %}
+    <input type="text" name="{% guest_field_name 'payment_promo_code' %}" class="form-control promo-code" {{ required }} {{ required_if }} {% if form_item.options['readonly'] %}readonly{% endif %} id="guest_payment_promo_code" value="{{ guest.payment_promo_code }}" />
+    <span class="help-block" id="guest_payment_promo_code_label" data-label="{{ form_item.options.display_label}}" data-capacity="{{ form_item.options.display_remaining_capacity}}" style="display: none;"></span>
+    <span class="glyphicon glyphicon-ok form-control-feedback text-success" aria-hidden="true" style="display: none;"></span>
+    <span class="glyphicon glyphicon-warning-sign form-control-feedback text-warning" aria-hidden="true" style="display: none;"></span>
+    <span class="glyphicon glyphicon-remove form-control-feedback text-danger" aria-hidden="true" style="display: none;"></span>
+
+    {{ help_block }}
+  </div>
+{% endunless %}

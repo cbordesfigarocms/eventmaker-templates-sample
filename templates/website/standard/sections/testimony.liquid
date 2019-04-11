@@ -1,0 +1,110 @@
+<div class="container {{ settings.spacing }}" data-section-id="{{ section.id }}" data-section-type="testimony">
+  {% if section.settings.title != blank %}
+    <div class="section-header text-center down-s">
+      <h2>{{ section.settings.title | escape }}</h2>
+    </div>
+  {% endif %}
+
+  <div class="testimony-wrapper up-s">
+    {% assign grid_item_width = 'col-sm-4' %}
+    {% assign per_line = 3 %}
+    {% case section.blocks.size %}
+      {% when 1 %}
+        {% assign grid_item_width = 'col-sm-12' %}
+        {% assign per_line = 1 %}
+      {% when 2 %}
+        {% assign grid_item_width = 'col-sm-6' %}
+        {% assign per_line = 2 %}
+      {% when 4 %}
+        {% assign grid_item_width = 'col-sm-6' %}
+        {% assign per_line = 2 %}
+    {% endcase %}
+
+    {% for block in section.blocks %}
+      {% assign remainder = forloop.index | modulo: per_line %}
+      {% if forloop.first == true or remainder == 1 %}
+        <div class="row">
+      {% endif %}
+        <div class="{{ grid_item_width }}" data-block-id="{{ block.id }}">
+          <blockquote class="text-center">
+            <span class="testimony-icon">
+              <i class="fa fa-quote-left"></i>
+            </span>
+            {% if block.settings.quote.html.size > 6 %}
+              <div class="testimony-text">{{ block.settings.quote.html | parse_liquid }}</div>
+            {% endif %}
+            {% if block.settings.title != blank %}
+              <cite>{{ block.settings.title | escape }}</cite>
+            {% endif %}
+          </blockquote>
+        </div>
+      {% if remainder == 0 or forloop.last == true %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Testimonies",
+    "name_translations": { "fr": "Témoignages" },
+    "icon": "fa fa-quote-right",
+    "hidden_from_user": false,
+    "max_blocks": 4,
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "label_translations": { "fr": "Titre" },
+        "default": "Testimonies",
+        "default_translations": { "fr": "Témoignages" }
+      }
+    ],
+    "blocks": [
+      {
+        "type": "quote",
+        "name": "Testimonies",
+        "name_translations": { "fr": "Témoignages" },
+        "add_block": "New testimony",
+        "add_block_translations": { "fr": "Nouveau témoignage" },
+        "remove_block": "Remove this testimony",
+        "remove_block_translations": { "fr": "Retirer ce témoignage" },
+        "settings": [
+          {
+            "type": "rte",
+            "id": "quote",
+            "label": "Text",
+            "label_translations": { "fr": "Texte" },
+            "default": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Author",
+            "label_translations": { "fr": "Auteur" },
+            "default": "John Smith"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Testimonies",
+        "name_translations": { "fr": "Témoignages" },
+        "blocks": [
+          {
+            "type": "quote"
+          },
+          {
+            "type": "quote"
+          },
+          {
+            "type": "quote"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

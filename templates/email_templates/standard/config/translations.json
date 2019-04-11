@@ -1,0 +1,32 @@
+{
+  "fr": {
+    "price": "Prix",
+    "total": "TOTAL",
+    "incl": "TTC",
+    "excl": "HT"
+  },
+  "en": {
+    "price": "Price",
+    "total": "TOTAL",
+    "incl": "incl. %{tax_name}",
+    "excl": "excl. %{tax_name}"
+  },
+  "it": {
+    "price": "Prezzo",
+    "total": "TOTALE",
+    "incl": "incl. %{tax_name}",
+    "excl": "escl. %{tax_name}"
+  },
+  "es": {
+    "price": "Precio",
+    "total": "TOTAL",
+    "incl": "incl. %{tax_name}",
+    "excl": "excl. %{tax_name}"
+  },
+  "de": {
+    "price": "Preis",
+    "total": "GESAMT",
+    "incl": "inkl. %{tax_name}",
+    "excl": "ohne %{tax_name}"
+  }
+}

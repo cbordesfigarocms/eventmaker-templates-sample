@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Colors",
+    "name_translations": { "fr": "Couleurs" },
+    "id": "colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Background",
+        "content_translations": { "fr": "Fond" }
+      },
+      {
+        "type": "color",
+        "id": "color_body_bg",
+        "label": "Main background color",
+        "label_translations": { "fr": "Couleur de fond principale" },
+        "default": "#FAFAFA"
+      },
+      {
+        "type": "header",
+        "content": "Text and buttons",
+        "content_translations": { "fr": "Texte et boutons" }
+      },
+      {
+        "type": "color",
+        "id": "color_body_text",
+        "label": "Text",
+        "label_translations": { "fr": "Texte" },
+        "default": "{{ event.secondary_color }};"
+      },
+      {
+        "type": "color",
+        "id": "color_button",
+        "label": "Buttons",
+        "label_translations": { "fr": "Boutons" },
+        "default": "{{ event.primary_color }}"
+      },
+      {
+        "type": "color",
+        "id": "color_button_text",
+        "label": "Buttons text",
+        "label_translations": { "fr": "Texte des boutons" },
+        "default": "#fff"
+      }
+    ]
+  }
+]

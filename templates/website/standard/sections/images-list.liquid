@@ -1,0 +1,120 @@
+<div class="container {{ settings.spacing }}" data-section-id="{{ section.id }}" data-section-type="images-list">
+  {% if section.settings.title != blank %}
+    <div class="section-header text-center down-s">
+      <h2 >{{ section.settings.title | escape }}</h2>
+    </div>
+  {% endif %}
+
+  {% if section.blocks.size > 0 %}
+    <div class="images-list up-s text-center">
+      {% for block in section.blocks %}
+        <div class="images-list-item" data-block-id="{{ block.id }}">
+          {% if block.settings.link != blank %}
+            <a href="{{ block.settings.link }}" {% if block.settings.target_blank %}target="_blank"{% endif %}>
+          {% endif %}
+          {% if block.settings.image != blank %}
+            <img src="{{ block.settings.image }}" alt="{{ block.settings.title }}" />
+          {% else %}
+            <img src="https://via.placeholder.com/160x160/F0F0F0/888888/?text=Eventmaker.io" alt="Image placeholder">
+          {% endif %}
+          {% if block.settings.link != blank %}
+            </a>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if section.blocks.size == 0 %}
+    Pas de contenu
+  {% endif %}
+</div>
+
+{% schema %}
+  {
+    "name": "List of logos",
+    "name_translations": { "fr": "Liste de logos" },
+    "class": "index-section",
+    "icon": "fa fa-sitemap",
+    "hidden_from_user": false,
+    "max_blocks": 20,
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "label_translations": { "fr": "Titre" },
+        "default": "List of logos",
+        "default_translations": { "fr": "Liste de logos" }
+      }
+    ],
+    "blocks": [
+      {
+        "type": "logo_image",
+        "name": "Logos",
+        "name_translations": { "fr": "Logos" },
+        "add_block": "New logo",
+        "add_block_translations": { "fr": "Nouveau logo" },
+        "remove_block": "Remove this logo",
+        "remove_block_translations": { "fr": "Retirer ce logo" },
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Alternative text",
+            "label_translations": { "fr": "Texte alternatif" },
+            "default": "Image",
+            "default_translations": { "fr": "Une image" },
+            "info": "If the image doesn't display",
+            "info_translations": { "fr": "Si l'image ne s'affiche pas" }
+          },
+          {
+            "type": "text",
+            "id": "link",
+            "label": "Link",
+            "label_translations": { "fr": "Lien" },
+            "info": "Optional",
+            "info_translations": { "fr": "Optionnel" }
+          },
+          {
+            "type": "checkbox",
+            "id": "target_blank",
+            "label": "Open in another tab",
+            "label_translations": { "fr": "Ouvrir dans un nouvel onglet" },
+            "default": true
+          },
+          {
+            "type": "header",
+            "content": "Advanced settings",
+            "content_translations": { "fr": "Paramètres avancés" }
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "List of logos",
+        "name_translations": { "fr": "Liste de logos" },
+        "blocks": [
+          {
+            "type": "logo_image"
+          },
+          {
+            "type": "logo_image"
+          },
+          {
+            "type": "logo_image"
+          },
+          {
+            "type": "logo_image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

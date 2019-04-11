@@ -1,0 +1,28 @@
+{% assign last_step_index = 0 %}
+{% for step in current_step.steps_in_execution_path %}
+  {% if guest and step.id == guest.registration_step_id %}
+    {% assign last_step_index = forloop.index0 | plus: 1 %}
+  {% endif %}
+  {% if step.id == current_step.id %}
+    {% assign current_step_index = forloop.index %}
+  {% endif %}
+{% endfor %}
+{% assign step_size = current_step.steps_in_execution_path.size  %}
+<ul class="nav nav-wizard {{ section.settings.step_number_class }}">
+  {% for step in current_step.steps_in_execution_path %}
+  
+    <li style="padding:0" class="col-sm-{{ 12 | divided_by: step_size }} {% if step.id == current_step.id %}active{% endif %} {% if forloop.index < current_step_index %}passed{% endif %}">
+
+      {% assign isLink = false %}
+      {% if guest %}
+        {% if step.id == current_step.id or forloop.index0 <= last_step_index %}
+          {% assign isLink = true %}
+        {% endif %}
+      {% endif %}
+
+      <a {% if isLink %}href="{{ guest.registration_form_url }}&step={{ step.id }}"{% endif %}>
+        <span class="badge badge-step">{{ forloop.index }}</span> {{ step.localized_title }}
+      </a>
+    </li>
+  {% endfor %}
+</ul>

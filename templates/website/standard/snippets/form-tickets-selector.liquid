@@ -1,0 +1,42 @@
+<table class="table">
+  <thead>
+    <th></th>
+    {% if guest_category.payment_enabled %}
+    <th>{{ t.price }}</th>
+    {% endif %}
+    <th>{{ t.qty }}</th>
+  </thead>
+
+  <tbody>
+    {% for ticket in guest_category.tickets %}
+    <tr>
+      <td>{{ ticket.name }}</td>
+      {% if guest_category.payment_enabled %}
+      <td>{{ ticket.price }} {{ ticket.currency }}</td>
+      {% endif %}
+      <td>
+        {% if ticket.remaining_slots == -1 or ticket.remaining_slots > 0 %}
+          {% assign max = ticket.max_tickets_per_registration %}
+          {% if ticket.remaining_slots != -1 and ticket.remaining_slots < ticket.max %}
+            {% assign max = ticket.remaining_slots %}
+          {% endif %}
+          <input type="hidden" name="guest[tickets][{{ forloop.index }}][guest_category_id]" value="{{ ticket.guest_category_id }}" />
+          <select class="form-control input-sm" name="guest[tickets][{{ forloop.index }}][quantity]" data-quantity="true">
+            {% for i in (0..max) %}
+              <option value="{{i}}">{{i}}</option>
+            {% endfor %}
+          </select>
+          <span data-ticketing-remove-all-tickets-message="{{ t.ticketing_remove_all_tickets }}" data-ticketing-remove-some-tickets-message="{{ t.ticketing_remove_some_tickets }}" data-ticketing-remove-one-ticket-message="{{ t.ticketing_remove_one_ticket }}"></span>
+        {% else %}
+          <small>{{ section.settings.full_message }}</small>
+        {% endif %}
+
+        <!-- This element is necessary for Caddie script to update price -->
+        <span data-guest-category-id="{{ ticket.id }}"></span>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="empty-space"></div>

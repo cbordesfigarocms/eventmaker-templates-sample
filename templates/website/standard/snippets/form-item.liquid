@@ -1,0 +1,131 @@
+{% assign required = '' %}
+{% assign required_if = '' %}
+{% if form_item.options['required'] %}
+  {% assign required = 'required="required"' %}
+{% endif %}
+
+{% assign prefill_from = '' %}
+{% if prefill %}
+  {% assign prefill_from = 'main_guest:' | append: prefill %}
+{% endif %}
+
+{% assign help_block = '' %}
+{% if form_item.options['help'] != blank %}
+  {% capture help_block %}
+    <div class="help-block">{{ form_item.localized_options__help }}</div>
+  {% endcapture %}
+{% endif %}
+
+{% assign validations = '' %}
+{% assign minlength = '' %}
+{% assign maxlength = '' %}
+{% assign phone_number_with_prefix = false %}
+{% if form_item.options['normalizations'].size > 0 %}
+  {% assign norm = form_item.options['normalizations'] | join: ' ' %}
+  {% assign validations = validations | append: norm %}
+{% endif %}
+
+{% if form_item.options['validations'].size > 0 %}
+  {% for validation in form_item.options['validations'] %}
+    {% case validation.key %}
+      {% when 'email' %}
+        {% assign validations = validations | append: " email" %}
+      {% when 'integer' %}
+        {% assign validations = validations | append: " digits" %}
+      {% when 'phone_number' %}
+        {% assign phone_number_with_prefix = true %}
+        {% assign phone_number_first_prefix = validation.first %}
+      {% when 'min_length', 'exact_length' %}
+        {% capture minlength = '' %}minlength="{{ validation.value }}"{% endcapture %}
+      {% when 'max_length', 'exact_length' %}
+        {% capture maxlength = '' %}maxlength="{{ validation.value }}"{% endcapture %}
+    {% endcase %}
+  {% endfor %}
+{% endif %}
+
+{% if validations.size > 0 %}
+  {% capture validations %}data-text-validation="{{ validations | join: ' ' }}"{% endcapture %}
+{% endif %}
+
+{% assign conditional_display = '' %}
+{% if form_item.display_conditions.size > 0 %}
+  {% assign field = form_item.display_conditions.first.field %}
+  {% assign value = form_item.display_conditions.first.value %}
+  {% assign operation = form_item.display_conditions.first.operation %}
+
+  {% case operation %}
+    {% when 'equal' %}
+      {% capture expression %}{{ field }}=={{ value }}{% endcapture %}
+    {% when 'nequal' %}
+      {% capture expression %}{{ field }}!={{ value }}{% endcapture %}
+    {% when 'startswith' %}
+      {% capture expression %}{{ field }}^={{ value }}{% endcapture %}
+    {% when 'endswith' %}
+      {% capture expression %}{{ field }}$={{ value }}{% endcapture %}
+  {% endcase %}
+
+  {% capture conditional_display %}data-show-if="{{ expression }}"{% endcapture %}
+  {% if form_item.options['required'] %}
+    {% assign required = '' %}
+    {% capture required_if %}required_if="{{ expression }}"{% endcapture %}
+  {% endif %}
+{% endif %}
+
+{% case form_item.type %}
+
+  {% when 'text_field' %}
+    {% if form_item.key == 'vat_number' %}
+      {% include 'form-vat-number' %}
+    {% elsif form_item.key == 'company_name' %}
+      {% include 'form-company-name' %}
+    {% elsif form_item.key == 'address' %}
+      {% include 'form-address' %}
+    {% elsif phone_number_with_prefix == true %}
+      {% include 'form-phone-number' %}
+    {% else %}
+      {% include 'form-text-field' %}
+    {% endif %}
+
+  {% when 'text_area' %}
+    {% include 'form-text-area' %}
+
+  {% when 'title', 'paragraph' %}
+    {% include 'form-paragraph' %}
+
+  {% when 'image' %}
+    {% include 'form-image' %}
+
+  {% when 'hidden_field' %}
+    {% include 'form-hidden-field' %}
+
+  {% when 'country' %}
+    {% include 'form-country' %}
+
+  {% when 'checkbox_group' %}
+    {% include 'form-checkbox-group' %}
+
+  {% when 'radio_group' %}
+    {% include 'form-radio-group' %}
+
+  {% when 'dropdown' %}
+    {% include 'form-dropdown' %}
+
+  {% when 'checkin_point_group' %}
+    {% include 'form-checkinpoint-group' %}
+
+  {% when 'promo_code' %}
+    {% include 'form-promo-code' %}
+
+  {% when 'merchant_type' %}
+    {% include 'form-merchant-type' %}
+
+  {% when 'file' %}
+    {% include 'form-file' %}
+
+  {% when 'date_picker' %}
+    {% include 'form-date-picker' %}
+
+  {% when 'subform' %}
+    {% include 'form-subform' %}
+
+{% endcase %}

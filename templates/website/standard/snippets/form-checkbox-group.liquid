@@ -1,0 +1,28 @@
+<div class="form-group" {{ conditional_display }}>
+  <label class="control-label" {{ required }}>{{ form_item.localized_label }}</label>
+  {% for option in form_item.form_item_options %}
+    <div class="checkbox">
+      <label>
+        {% if guest.guest_metadata[option.key] %}
+          {% if guest.guest_metadata[option.key] == "true" %}
+            {% assign checked = true %}
+          {% else %}
+            {% assign checked = false %}
+          {% endif %}
+        {% else %}
+          {% assign checked = option.value %}
+        {% endif %}
+
+        {% assign prefill_from = '' %}
+        {% if copy_fields_mapping[option.key] %}
+          {% assign prefill_from = 'main_guest:' | append: copy_fields_mapping[option.key] %}
+        {% endif %}
+        <input type="hidden" name="{% guest_field_name option.key %}" value="{% if form_item.options['readonly'] and checked == true %}true{% else %}false{% endif %}" {% if form_item.options['readonly'] and prefill_from != blank %}data-copy-from="{{prefill_from}}"{% endif %} />
+        <input type="checkbox" name="{% guest_field_name option.key %}" value="true" {% if checked == true %}checked="checked"{% endif %} {% if form_item.options['readonly'] %}disabled{% endif %} {% if prefill_from != blank %}data-copy-from="{{prefill_from}}"{% endif %} {{ required_if }} />
+        {{ option.localized_label }}
+      </label>
+    </div>
+  {% endfor %}
+
+  {{ help_block }}
+</div>

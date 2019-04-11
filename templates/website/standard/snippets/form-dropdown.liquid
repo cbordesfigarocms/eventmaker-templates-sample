@@ -1,0 +1,15 @@
+<div class="form-group" {{ conditional_display }}>
+  <label class="control-label" {{ required }}>{{ form_item.localized_label }}</label>
+  <select name="{% guest_field_name form_item.key %}" class="form-control" {% if prefill_from != blank %}data-copy-from="{{prefill_from}}"{% endif %} {{ required }} {{ required_if }} {% if form_item.options['readonly'] %}disabled{% endif %}>
+    {% assign default_value = form_item.options['default_value'] %}
+    {% assign options_groups = form_item.options['options_groups'] %}
+    {% guest_select_options form_item.key "", selected: default_value, groups: options_groups %}
+  </select>
+
+  {% if form_item.options['readonly'] %}
+    {% capture field_value %}{% if guest.guest_metadata[form_item.key] != nil %}{{ guest.guest_metadata[form_item.key] }}{% else %}{{ guest[form_item.key] }}{% endif %}{% endcapture %}
+    <input type="hidden" name="{% guest_field_name form_item.key %}" value="{% if field_value != blank %}{{ field_value }}{% else %}{{ default_value }}{% endif %}" {% if prefill_from != blank %}data-copy-from="{{prefill_from}}"{% endif %} />
+  {% endif %}
+
+  {{ help_block }}
+</div>

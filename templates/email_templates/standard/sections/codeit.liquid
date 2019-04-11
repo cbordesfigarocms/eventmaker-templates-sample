@@ -1,0 +1,23 @@
+{% liquid_template section.settings.liquid_field %}
+
+{% schema %}
+  {
+    "name": "Snippet",
+    "name_translations": { "fr": "Snippet" },
+    "icon": "fa fa-code",
+    "settings": [
+      {
+        "type": "liquid_field",
+        "id": "liquid_field",
+        "label": "Snippet",
+        "label_translations": { "fr": "Snippet" }
+      }
+    ],
+    "presets": [
+      {
+        "name": "Code it",
+        "name_translations": { "fr": "Code" }
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,353 @@
+{% assign button_color = settings.color_button %}
+
+{% if section.settings.title != blank %}
+  <!--[if mso | IE]>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
+      <tr>
+        <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+  <![endif]-->
+  <div style="margin:0 auto;max-width:600px;background:#fff;">
+    <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#fff;" align="center" border="0">
+      <tbody>
+        <tr>
+          <td style="text-align:center;vertical-align:top;font-size:0px;padding:0px;">
+            <!--[if mso | IE]>
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="vertical-align:top;width:600px;">
+            <![endif]-->
+            <div aria-labelledby="mj-column-per-100" class="mj-column-per-100" style="vertical-align:top;display:inline-block;font-size:13px;text-align:left;width:100%;">
+              <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                <tr>
+                  <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                    <div style="font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:1;text-align:center;color:{{ settings.color_body_text }};">
+                      <h2>{{ section.settings.title | escape }}</h2>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <!--[if mso | IE]>
+                  </td>
+                </tr>
+              </table>
+            <![endif]-->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!--[if mso | IE]>
+        </td>
+      </tr>
+    </table>
+  <![endif]-->
+{% endif %}
+
+{% assign per_section = section.settings.per_section | plus: 0 %}
+{% guests_paginate segment_id: section.settings.segment_id.first.segment_id, per_page: per_section %}
+
+  {% assign item_width = '150px' %}
+  {% assign image_width = '100' %}
+  {% assign item_class = 'mj-column-per-25' %}
+  {% assign per_line = section.settings.per_line | plus: 0 %}
+  {% case per_line %}
+    {% when 1 %}
+      {% assign item_width = '600px' %}
+      {% assign image_width = '550' %}
+      {% assign item_class = 'mj-column-per-100' %}
+    {% when 2 %}
+      {% assign item_width = '300px' %}
+      {% assign image_width = '250' %}
+      {% assign item_class = 'mj-column-per-50' %}
+    {% when 3 %}
+      {% assign item_width = '200px' %}
+      {% assign image_width = '150' %}
+      {% assign item_class = 'mj-column-per-33' %}
+    {% when 4 %}
+      {% assign item_width = '150px' %}
+      {% assign image_width = '100' %}
+      {% assign item_class = 'mj-column-per-25' %}
+  {% endcase %}
+
+  <!--[if mso | IE]>
+    <table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600">
+      <tr>
+        <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+  <![endif]-->
+  <div style="background:#fff;background-color:#fff;margin:0px auto;max-width:600px;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#fff;background-color:#fff;width:100%;">
+      <tbody>
+        <tr>
+          <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;vertical-align:top;">
+            {% for guest in guests %}
+              {% if forloop.first == true %}
+                <!--[if mso | IE]>
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td class="" style="vertical-align:top;width:{{item_width}};">
+                <![endif]-->
+              {% endif %}
+                <div class="{{item_class}} outlook-group-fix" style="font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                    {% assign last_block_type = "" %}
+                    {% for block in section.blocks %}
+
+                      {% if block.settings.enable_custom_css == true %}
+                        {% assign button_color = block.settings.button_color %}
+                      {% endif %}
+
+                      {% assign field_value = guest[block.settings.column_field] %}
+
+                      {% if field_value != blank %}
+                        <!-- <p>last_block_type: {{last_block_type}} - current_block: {{block.settings.column_display}}</p> -->
+                        {% if last_block_type == "text" and block.settings.column_display != "text" %}
+                              </div>
+                            </td>
+                          </tr>
+                        {% endif %}
+                        {% if block.settings.column_display == "text" %}
+                          {% if last_block_type != "text" or forloop.first == true and last_block_type != "text" %}
+                            <tr>
+                              <td align="center" style="font-size:0px;padding:10px 20px;word-break:break-word;">
+                                <div style="font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:1;text-align:center;color:{{ settings.color_body_text }};">
+                          {% endif %}
+                                  <p>{% if block.settings.highlight == true %}<strong>{% endif %}{{ field_value }}{% if block.settings.highlight %}</strong>{% endif %}</p>
+                        {% elsif block.settings.column_display == "link" %}
+                          <tr>
+                            <td style="word-break:break-word;font-size:0px;padding:10px;" align="center">
+                              <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:separate;" align="center" border="0">
+                                <tbody>
+                                  <tr>
+                                    <td style="border:none;border-radius:0px;color:{{ settings.color_button_text }};cursor:auto;padding:10px 20px;" align="center" valign="top" bgcolor="{{ button_color }}">
+                                      <a href="{{ field_value }}" style="display:inline-block;text-decoration:none;background:{{ button_color }};color:{{ settings.color_button_text }};font-family:Helvetica;font-size:13px;font-weight:bold;margin:0px;" target="_blank">
+                                        {{ block.settings.link_label }}
+                                      </a>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        {% elsif block.settings.column_display == "image" %}
+                          <tr>
+                            <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                              <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
+                                <tbody>
+                                  <tr>
+                                    <td style="width:{{image_width}}px;">
+                                      <img height="auto" src="{{ field_value }}" alt="{{ field_value }}" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;" width="{{image_width}}" />
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        {% endif %}
+                      {% endif %}
+                      {% if forloop.last == true and block.settings.column_display == "text" %}
+                            </div>
+                          </td>
+                        </tr>
+                      {% endif %}
+                      {% assign last_block_type = block.settings.column_display %}
+                    {% endfor %}
+                  </table>
+                </div>
+              {% if forloop.last == true %}
+                <!--[if mso | IE]>
+                      </td>
+                    </tr>
+                  </table>
+                <![endif]-->
+              {% else %}
+                <!--[if mso | IE]>
+                  </td>
+                  <td class="" style="vertical-align:top;width:{{item_width}};">
+                <![endif]-->
+              {% endif %}
+            {% endfor %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!--[if mso | IE]>
+        </td>
+      </tr>
+    </table>
+  <![endif]-->
+
+{% endguests_paginate %}
+
+{% schema %}
+  {
+    "name": "List of guests",
+    "name_translations": { "fr": "Liste de participants" },
+    "class": "index-section",
+    "icon": "fa fa-group",
+    "hidden_from_user": false,
+    "max_blocks": 6,
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "label_translations": { "fr": "Titre" },
+        "default": "Guests",
+        "default_translations": { "fr": "Participants" }
+      },
+
+      {
+        "type": "segments_picker",
+        "id": "segment_id",
+        "label": "Guests segment",
+        "label_translations": { "fr": "Segment de participants" }
+      },
+
+      {
+        "type": "select",
+        "id": "per_line",
+        "label": "Number of items per line",
+        "label_translations": { "fr": "Nombre d'éléments par ligne" },
+        "default": "4",
+        "options": [
+          {
+            "value": 1,
+            "label": "1",
+            "label_translations": { "fr": "1" }
+          },
+          {
+            "value": 2,
+            "label": "2",
+            "label_translations": { "fr": "2" }
+          },
+          {
+            "value": 3,
+            "label": "3",
+            "label_translations": { "fr": "3" }
+          },
+          {
+            "value": 4,
+            "label": "4",
+            "label_translations": { "fr": "4" }
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "per_section",
+        "label": "Number of items displayed",
+        "label_translations": { "fr": "Nombre d'éléments à afficher" },
+        "default": "20",
+        "info": "Type in a number between 1 and 100",
+        "info_translations": { "fr" : "Spécifiez un nombre entre 1 et 100" }
+      }
+    ],
+    "blocks": [
+      {
+        "type": "table_columns",
+        "name": "Guest information",
+        "name_translations": { "fr": "Informations participant" },
+        "add_block": "New field to display",
+        "add_block_translations": { "fr": "Nouveau champ à afficher" },
+        "remove_block": "Remove this field",
+        "remove_block_translations": { "fr": "Retirer ce champ" },
+        "display_property": "column_field",
+        "settings": [
+          {
+            "type": "guest_field_picker",
+            "id": "column_field",
+            "label": "Field name",
+            "label_translations": { "fr": "Nom du champ" },
+            "default": "identity"
+          },
+          {
+            "type": "select",
+            "id": "column_display",
+            "label": "Information type",
+            "label_translations": { "fr": "Type d'information" },
+            "default": "text",
+            "options": [
+              {
+                "value": "text",
+                "label": "Text",
+                "label_translations": { "fr": "Texte" }
+              },
+              {
+                "value": "link",
+                "label": "Link",
+                "label_translations": { "fr": "Lien" }
+              },
+              {
+                "value": "image",
+                "label": "Image",
+                "label_translations": { "fr": "Image" }
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "id": "link_label",
+            "label": "Link label",
+            "label_translations": { "fr": "Libellé du lien" },
+            "default": "Click",
+            "default_translations": { "fr": "Cliquez" },
+            "show_if": {
+              "source_id": "column_display",
+              "operator": "==",
+              "value": "link"
+            }
+          },
+          {
+            "type": "checkbox",
+            "id": "enable_custom_css",
+            "label": "Apply a custom style",
+            "label_translations": { "fr": "Appliquer un style personnalisé" },
+            "default": false,
+            "show_if": {
+              "source_id": "column_display",
+              "operator": "==",
+              "value": "link"
+            }
+          },
+          {
+            "type": "color",
+            "id": "button_color",
+            "label": "Button color",
+            "label_translations": { "fr": "Couleur du bouton" },
+            "default": "#000",
+            "show_if": {
+              "source_id": "enable_custom_css",
+              "operator": "==",
+              "value": true
+            }
+          },
+          {
+            "type": "checkbox",
+            "id": "highlight",
+            "label": "Highlight text",
+            "label_translations": { "fr": "Mettre en évidence" },
+            "default": false,
+            "show_if": {
+              "source_id": "column_display",
+              "operator": "==",
+              "value": "text"
+            }
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "List of guests",
+        "name_translations": { "fr": "Liste de participants" },
+        "blocks": [
+          {
+            "type": "table_columns"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

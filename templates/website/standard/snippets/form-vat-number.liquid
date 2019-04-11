@@ -1,0 +1,10 @@
+<div class="form-group has-feedback" {{ conditional_display }}>
+  <label class="control-label" {{ required }}>{{ form_item.localized_label }}</label>
+  <input type="text" name="{% guest_field_name 'vat_number' %}" id="guest_vat_number" {% if prefill_from != blank %}data-copy-from="{{prefill_from}}"{% endif %} class="form-control vat-number" {{ required }} {{ required_if }} {% if form_item.options['readonly'] %}readonly{% endif %} value="{{ guest['vat_number'] }}" {{ minlength }} {{ maxlength }} {{ validations }} placeholder="{{ form_item.options.placeholder }}" data-live-check="true" />
+  <span class="glyphicon glyphicon-ok form-control-feedback text-success" aria-hidden="true" style="display: none;"></span>
+  <span class="glyphicon glyphicon-warning-sign form-control-feedback text-warning" aria-hidden="true" style="display: none;"></span>
+  <span class="glyphicon glyphicon-remove form-control-feedback text-danger" aria-hidden="true" style="display: none;"></span>
+  <span class="glyphicon glyphicon-option-horizontal form-control-feedback text-primary" aria-hidden="true" style="display: none;"></span>
+
+  {{ help_block }}
+</div>

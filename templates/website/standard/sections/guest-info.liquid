@@ -1,0 +1,256 @@
+<div class="container {{ settings.spacing }}" data-section-id="{{ section.id }}" data-section-type="guest-info">
+  {% if section.settings.enable_back_button == true and section.settings.back_button_url != blank %}
+    <div class="row down-s">
+      <div class="col-xs-12">
+        <a href="/{{ section.settings.back_button_url }}"><i class="fa fa-angle-left"></i> {{ section.settings.back_button_label }}</a>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="row guest-info-header down-s">
+    {% if section.settings.enable_illustration == true and section.settings.illustration_field != blank %}
+      {% assign illustration_url = current_resource[section.settings.illustration_field] %}
+    {% endif %}
+
+    {% if illustration_url != blank and section.settings.illustration_alignment == "left" %}
+      <div class="col-md-2 col-sm-3 col-xs-4 image-container">
+        <img src="{{ illustration_url }}" alt="{{ illustration_url }}" />
+      </div>
+    {% endif %}
+
+    <div class="{% if illustration_url != blank %}col-md-10 col-sm-9 col-xs-8{% else %}col-xs-12{% endif %}">
+      <h2 class="big-title">{{ current_resource[section.settings.title_field] }}</h2>
+    </div>
+
+    {% if illustration_url != blank and section.settings.illustration_alignment == "right" %}
+      <div class="col-md-2 col-sm-3 col-xs-4 image-container">
+        <img src="{{ illustration_url }}" alt="{{ illustration_url }}" />
+      </div>
+    {% endif %}
+  </div>
+
+  {% unless section.settings.inversed_bg == true %}
+    <hr style="background: #eee; margin: 10px 0; height: 1px;" />
+  {% endunless %}
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="guest-info-details {% if section.settings.inversed_bg == true %}bg-inverse{% endif %}">
+        {% if section.settings.information_title != blank %}
+          <h3>{{ section.settings.information_title }}</h3>
+        {% endif %}
+
+        <dl class="{% if section.settings.information_alignment == "horizontal" %}dl-horizontal{% endif %}">
+          {% for block in section.blocks %}
+            {% assign field_value = current_resource[block.settings.field_name] %}
+            {% if field_value != blank %}
+              <dt>{{ block.settings.field_label }}</dt>
+              <dd {% if section.settings.information_alignment == "vertical" and block.settings.field_display == "image" %}style="padding-top: 5px;"{% endif %}>
+                {% if block.settings.field_display == "text" %}
+                  {{ field_value | newline_to_br }}
+                {% elsif block.settings.field_display == "link" %}
+                  <a href="{{ field_value }}" target="_blank">{{ field_value }}</a>
+                {% elsif block.settings.field_display == "image" %}
+                  <img src="{{ field_value }}" alt="{{ field_value }}" style="max-height: 100px;" />
+                {% endif %}
+              </dd>
+              <br />
+            {% endif %}
+          {% endfor %}
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Guest information",
+    "name_translations": { "fr": "Informations participant" },
+    "class": "index-section",
+    "icon": "fa fa-user",
+    "hidden_from_user": false,
+    "settings": [
+      {
+        "type": "guest_field_picker",
+        "id": "title_field",
+        "label": "Field for the title",
+        "label_translations": { "fr": "Champ pour le titre" },
+        "default": "identity"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_illustration",
+        "label": "Display an illustration",
+        "label_translations": { "fr": "Afficher une illustration" },
+        "default": false
+      },
+      {
+        "type": "guest_field_picker",
+        "id": "illustration_field",
+        "label": "Field for the illustration",
+        "label_translations": { "fr": "Champ pour l'illustration" },
+        "show_if": {
+          "source_id": "enable_illustration",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "select",
+        "id": "illustration_alignment",
+        "label": "Illustration's alignment",
+        "label_translations": { "fr": "Alignement de l'illustration" },
+        "default": "left",
+        "options": [
+          {
+            "value": "left",
+            "label": "On the left of the title",
+            "label_translations": { "fr": "À gauche du titre" }
+          },
+          {
+            "value": "right",
+            "label": "On the right of the title",
+            "label_translations": { "fr": "À droite du titre" }
+          }
+        ],
+        "show_if": {
+          "source_id": "enable_illustration",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "text",
+        "id": "information_title",
+        "label": "Title of information section",
+        "label_translations": { "fr": "Titre de la section d'informations" },
+        "default": "Information",
+        "default_translations": { "fr": "Informations" }
+      },
+      {
+        "type": "select",
+        "id": "information_alignment",
+        "label": "Information's alignment",
+        "label_translations": { "fr": "Alignement des informations" },
+        "default": "horizontal",
+        "options": [
+          {
+            "value": "horizontal",
+            "label": "Horizontal",
+            "label_translations": { "fr": "Horizontal" }
+          },
+          {
+            "value": "vertical",
+            "label": "Vertical",
+            "label_translations": { "fr": "Vertical" }
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "inversed_bg",
+        "label": "Inversed background",
+        "label_translations": { "fr": "Fond inversé" },
+        "default": false,
+        "info": "Background and text colors will be the same as buttons",
+        "info_translations": { "fr": "Les couleurs de fond et du texte seront telles que définies pour les boutons" }
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_back_button",
+        "label": "Display a back button",
+        "label_translations": { "fr": "Afficher un bouton retour" },
+        "default": false
+      },
+      {
+        "type": "website_page_picker",
+        "id": "back_button_url",
+        "label": "Back button URL",
+        "label_translations": { "fr": "URL du bouton de retour" },
+        "show_if": {
+          "source_id": "enable_back_button",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "text",
+        "id": "back_button_label",
+        "label": "Back button label",
+        "label_translations": { "fr": "Libellé du bouton de retour" },
+        "default": "Back",
+        "default_translations": { "fr": "Retour" },
+        "show_if": {
+          "source_id": "enable_back_button",
+          "operator": "==",
+          "value": true
+        }
+      }
+    ],
+    "blocks": [
+      {
+        "type": "field_block",
+        "name": "Guest information",
+        "name_translations": { "fr": "Informations participant" },
+        "add_block": "New field to display",
+        "add_block_translations": { "fr": "Nouveau champ à afficher" },
+        "remove_block": "Remove this field",
+        "remove_block_translations": { "fr": "Retirer ce champ" },
+        "display_property": "field_label",
+        "settings": [
+          {
+            "type": "text",
+            "id": "field_label",
+            "label": "Field label",
+            "label_translations": { "fr": "Intitulé du champ" },
+            "default": "Email",
+            "default_translations": { "fr": "Email" }
+          },
+          {
+            "type": "guest_field_picker",
+            "id": "field_name",
+            "label": "Field name",
+            "label_translations": { "fr": "Nom du champ" },
+            "default": "email"
+          },
+          {
+            "type": "select",
+            "id": "field_display",
+            "label": "Information type",
+            "label_translations": { "fr": "Type d'information" },
+            "default": "text",
+            "options": [
+              {
+                "value": "text",
+                "label": "Text",
+                "label_translations": { "fr": "Texte" }
+              },
+              {
+                "value": "link",
+                "label": "Link",
+                "label_translations": { "fr": "Lien" }
+              },
+              {
+                "value": "image",
+                "label": "Image",
+                "label_translations": { "fr": "Image" }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Guest information",
+        "name_translations": { "fr": "Informations participant" },
+        "blocks": [
+          {
+            "type": "field_block"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

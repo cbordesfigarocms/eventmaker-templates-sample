@@ -1,0 +1,14 @@
+<div class="form-group" {{ conditional_display }}>
+
+  {% if form_item.options.required %}
+    {% if conditional_display != blank and expression != blank %}
+      {% guest_field form_item.key form_item.localized_label, type: 'file', required_if: expression %}
+    {% else %}
+      {% guest_field form_item.key form_item.localized_label, type: 'file', required: true %}
+    {% endif %}
+  {% else %}
+    {% guest_field form_item.key form_item.localized_label, type: 'file' %}
+  {% endif %}
+
+  {{ help_block }}
+</div>

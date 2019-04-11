@@ -1,0 +1,140 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+  <head>
+    <title>{{ event.title }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <style type="text/css">
+      #outlook a { padding: 0; }
+      .ReadMsgBody { width: 100%; }
+      .ExternalClass { width: 100%; }
+      .ExternalClass * { line-height:100%; }
+      body { margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+      table, td { border-collapse:collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+      img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+      p { display: block; margin: 13px 0; }
+      /* Block highlight */
+      .highlight { opacity: 0.7; box-shadow: 0px 0px 6px #888; transition: opacity 0.3s ease-out 0s; transition: box-shadow 0.3s ease-out 0s; }
+    </style>
+    <!--[if !mso]><!-->
+      <style type="text/css">
+        @media only screen and (max-width:480px) {
+          @-ms-viewport { width:320px; }
+          @viewport { width:320px; }
+        }
+      </style>
+    <!--<![endif]-->
+    <!--[if mso]>
+      <xml>
+        <o:OfficeDocumentSettings>
+          <o:AllowPNG/>
+          <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+      </xml>
+    <![endif]-->
+    <style type="text/css">
+      @media only screen and (min-width:480px) {
+        .mj-column-per-100, * [aria-labelledby="mj-column-per-100"] { width:100%!important; }
+        .mj-column-per-100 { width:100% !important; max-width: 100%; }
+        .mj-column-per-50 { width:50% !important; max-width: 50%; }
+        .mj-column-per-33 { width:33.333333333333336% !important; max-width: 33.333333333333336%; }
+        .mj-column-per-25 { width:25% !important; max-width: 25%; }
+      }
+      @media only screen and (max-width:480px) {
+        table.full-width-mobile { width: 100% !important; }
+        td.full-width-mobile { width: auto !important; }
+      }
+    </style>
+  </head>
+  <body style="background: {{ settings.color_body_bg }};">
+    <div style="background-color:{{ settings.color_body_bg }};">
+      <!--[if mso | IE]>
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
+          <tr>
+            <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]-->
+      <div style="margin:0 auto;max-width:600px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;" align="center" border="0">
+          <tbody>
+            <tr>
+              <td style="text-align:center;vertical-align:top;font-size:0px;padding:10px;">
+                <!--[if mso | IE]>
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="vertical-align:top;width:600px;">
+                <![endif]-->
+                <div aria-labelledby="mj-column-per-100" class="mj-column-per-100" style="vertical-align:top;display:inline-block;font-size:13px;text-align:left;width:100%;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                    <tbody>
+                      <tr>
+                        <td style="word-break:break-word;font-size:0px;">
+                          <div>
+
+                            {% section 'header' %}
+
+                            {{ content }}
+
+                            {% section 'footer' %}
+
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!--[if mso | IE]>
+                      </td>
+                    </tr>
+                  </table>
+                <![endif]-->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!--[if mso | IE]>
+            </td>
+          </tr>
+        </table>
+      <![endif]-->
+    </div>
+    {% if is_preview == true %}
+      <script type="text/javascript">
+        // Post Message
+        var msgHandler = function(e) {
+          if (e.data.sectionId != null)
+            var element = document.querySelector("[data-section-id=" + e.data.sectionId + "]");
+            if (element == null) {
+              return;
+            }
+
+          switch (e.data.type) {
+            case 'scroll':
+              element.scrollIntoView({ behavior: 'smooth' });
+              break;
+            case 'removeSection':
+              element.style.transition = "opacity 1s ease";
+              element.style.opacity = 0;
+              setTimeout(function() { element.remove(); }, 600);
+              break;
+            case 'blockToggle':
+              var highlighted = document.querySelector(".highlight");
+              if (highlighted != null)
+                highlighted.classList.remove("highlight");
+              if (e.data.blockId != null)
+                element.classList.add("highlight");
+              break;
+          }
+        }
+
+        if (window.postMessage) {
+          if (window.addEventListener) {
+            window.addEventListener("message", msgHandler, false);
+          } else if (window.attachEvent) {
+            window.attachEvent("onmessage", msgHandler);
+          }
+        }
+      </script>
+    {% endif %}
+  </body>
+</html>

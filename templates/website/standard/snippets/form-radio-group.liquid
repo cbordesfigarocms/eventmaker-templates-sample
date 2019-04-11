@@ -1,0 +1,22 @@
+<div class="form-group" {{ conditional_display }} {% if prefill_from != blank %}data-copy-from="{{prefill_from}}"{% endif %}>
+  <label class="control-label" {{ required }}>{{ form_item.localized_label }}</label>
+  {% for option in form_item.form_item_options %}
+    {% assign checked = false %}
+    {% if guest.guest_metadata[form_item.key] == option.key or guest.guest_metadata[form_item.key] == blank and form_item.options['default_value'] == option.key %}
+      {% assign checked = true %}
+      {% assign checked_value = option.key %}
+    {% endif %}
+    <div class="radio">
+      <label>
+        <input type="radio" name="{% guest_field_name form_item.key %}" value="{{ option.key }}" {% if checked %}checked="checked"{% endif %} {% if form_item.options['readonly'] %}disabled{% endif %} {{ required_if }} />
+        {{ option.label }}
+      </label>
+    </div>
+  {% endfor %}
+
+  {% if form_item.options['readonly'] %}
+    <input type="hidden" name="{% guest_field_name form_item.key %}" value="{{ checked_value }}" {% if prefill_from != blank %}data-copy-from="{{prefill_from}}"{% endif %} />
+  {% endif %}
+
+  {{ help_block }}
+</div>

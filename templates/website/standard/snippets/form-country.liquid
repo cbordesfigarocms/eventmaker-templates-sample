@@ -1,0 +1,16 @@
+<div class="form-group" {{ conditional_display }}>
+  <label class="control-label" {{ required }}>{{ form_item.localized_label }}</label>
+  <select name="{% guest_field_name form_item.key %}" class="form-control" {% if prefill_from != blank %}data-copy-from="{{prefill_from}}"{% endif %} {{ required }} {{ required_if }} {% if form_item.options['readonly'] %}disabled{% endif %}>
+    {% if form_item.options['first'] %}
+      {% country_select_options "", first: "form_item.options['first']" %}
+    {% else %}
+      {% country_select_options "", first: "France" %}
+    {% endif %}
+  </select>
+
+  {% if form_item.options['readonly'] %}
+    <input type="hidden" name="{% guest_field_name form_item.key %}" value="{{ guest[form_item.key]}}" {% if prefill_from != blank %}data-copy-from="{{prefill_from}}"{% endif %} />
+  {% endif %}
+
+  {{ help_block }}
+</div>

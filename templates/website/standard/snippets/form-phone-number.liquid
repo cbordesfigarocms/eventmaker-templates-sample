@@ -1,0 +1,25 @@
+{% capture field_value %}{% if guest.guest_metadata[form_item.key] != nil %}{{ guest.guest_metadata[form_item.key] }}{% else %}{{ guest[form_item.key] }}{% endif %}{% endcapture %}
+{% capture phone_prefix %}{{ form_item.key }}_prefix{% endcapture %}
+{% capture first_prefix %}France{% endcapture %}
+
+{% if phone_number_first_prefix != blank %}
+  {% capture first_prefix %}{{ phone_number_first_prefix }}{% endcapture %}
+{% endif %}
+
+<div class="form-group" {{ conditional_display }}>
+  <label class="control-label" {{ required }}>{{ form_item.localized_label }}</label>
+
+  <div class="row">
+    <div class="col-xs-4">
+  	  <select name="{% guest_field_name phone_prefix %}" class="form-control" {{ required }} {{ required_if }}>
+        {% phone_prefix_select_options "", first: first_prefix, field: phone_prefix %}
+  	  </select>
+    </div>
+
+    <div class="col-xs-8">
+      <input type="text" name="{% guest_field_name form_item.key %}" class="form-control" {% if prefill_from != blank %}data-copy-from="{{prefill_from}}"{% endif %} {{ required }} {{ required_if }} {% if form_item.options['readonly'] %}readonly{% endif %} value="{{ field_value }}" {{ minlength }} {{ maxlength }} {{ validations }} placeholder="{{ form_item.localized_options__placeholder }}" />
+    </div>
+  </div>
+
+  {{ help_block }}
+</div>

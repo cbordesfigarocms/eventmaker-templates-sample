@@ -1,0 +1,52 @@
+<div class="cart-container affix-top">
+
+  {% if show_tickets == true %}
+    {% for ticket in my_ticketing.tickets %}
+      {% foreach_linked_guest guest_category_id: ticket.guest_category_id %}
+        {% if lgloop.index == 1 %}
+          <h4>{{ ticket.name}} <small>{{ lgloop.length }} {{ t.tickets }}</small></h4>
+        {% endif %}
+        - {{ linked_guest.identity }}<br />
+      {% endforeach_linked_guest %}
+    {% endfor %}
+  {% endif %}
+
+  <h4>{{ t.your_cart }}</h4>
+
+  <hr style="background: #CCC; margin: 10px 0; height: 1px;" />
+
+  {% if guest_category.currency == "EUR" %}
+    {% assign currency_symbol = "€" %}
+  {% elsif guest_category.currency == "USD" %}
+    {% assign currency_symbol = "$" %}
+  {% else %}
+    {% assign currency_symbol = guest_category.currency %}
+  {% endif %}
+
+  {% assign tax_name = guest_category.localized_taxes_name %}
+  {% assign incl_taxes_text = t.incl %}
+  {% assign excl_taxes_text = t.excl %}
+
+  <div class="row">
+    <div class="col-xs-8 text-left">{{ t.total }} {{ excl_taxes_text }}</div>
+    <div class="col-xs-4 text-right text-nowrap"><span class="excl-vat-value" data-delimiter="{{ event.decimal_delimiter }}"></span> <span class="caddie-currency">{{ currency_symbol }}</div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-8 text-left"><strong>{{ t.total }} <span class="incl-vat-suffix">{{ incl_taxes_text }}</span></strong></div>
+    <div class="col-xs-4 text-right text-nowrap"><strong><span class="caddie-value" data-delimiter="{{ event.decimal_delimiter }}"></span> <span class="caddie-currency">{{ currency_symbol }}</span></strong></div>
+  </div>
+
+  <div class="extra-cart" style="display: none;">
+    <h6>{{ t.of_which_supplement }}</h6>
+    <div class="row">
+      <div class="col-xs-8 text-left">{{ t.total }} {{ excl_taxes_text }}</div>
+      <div class="col-xs-4 text-right text-nowrap"><span class="extra-cart-excl-vat-value" data-delimiter="{{ event.decimal_delimiter }}"></span> <span class="caddie-currency">{{ currency_symbol }}</div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-8 text-left"><strong>{{ t.total }} {{ incl_taxes_text }}</strong></div>
+      <div class="col-xs-4 text-right text-nowrap"><strong><span class="extra-cart-value" data-delimiter="{{ event.decimal_delimiter }}"></span> <span class="caddie-currency">{{ currency_symbol }}</span></strong></div>
+    </div>
+  </div>
+</div>

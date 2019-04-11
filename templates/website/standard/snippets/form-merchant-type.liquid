@@ -1,0 +1,19 @@
+{% unless guest.linked_guest? %}
+  <div class="form-group" {{ conditional_display }} data-payment="true">
+    <label class="control-label" {{ required }}>{{ form_item.localized_label }}</label>
+    {% if guest_category.available_merchant_types.size > 0 %}
+      {% for merchant_type in guest_category.available_merchant_types %}
+        <div class="radio">
+          <label>
+            <input type="radio" name="{% guest_field_name form_item.key %}" value="{{ merchant_type.key }}" {% if guest[form_item.key] == merchant_type.key %}checked="checked"{% endif %} {% if form_item.options['readonly'] %}disabled{% endif %} {{ required_if }} />
+            {{ merchant_type.label }}
+          </label>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="form-control-static">{{ t.no_merchant_types_selected }}</p>
+    {% endif %}
+
+    {{ help_block }}
+  </div>
+{% endunless %}
