@@ -44,37 +44,37 @@ Elles se composent de deux parties :
 - Une partie de définition des paramètres de champs de la section en Json :
 
     `{% schema %}
-    {
-        "name": "Title only",
-        "name_translations": { "fr": "Titre seul" },
-        "class": "index-section",
-        "icon": "fa fa-font",
-        "hidden_from_user": false,
-        "settings": [
-        {
-            "type": "text",
-            "id": "title",
-            "label": "Title",
-            "label_translations": { "fr": "Titre" },
-            "default": "Title",
-            "default_translations": { "fr": "Titre" }
-        },
-        ...
-            {
-                "label": "Left",
-                "label_translations": { "fr": "Gauche" },
-                "value": "left"
-            }
-            ]
-        }
-        ],
-        "presets": [
         {
             "name": "Title only",
-            "name_translations": { "fr": "Titre seul" }
+            "name_translations": { "fr": "Titre seul" },
+            "class": "index-section",
+            "icon": "fa fa-font",
+            "hidden_from_user": false,
+            "settings": [
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Title",
+                        "label_translations": { "fr": "Titre" },
+                        "default": "Title",
+                        "default_translations": { "fr": "Titre" }
+                    },
+                    ...
+                            {
+                                "label": "Left",
+                                "label_translations": { "fr": "Gauche" },
+                                "value": "left"
+                            }
+                        ]
+                    }
+                ],
+                "presets": [
+                {
+                    "name": "Title only",
+                    "name_translations": { "fr": "Titre seul" }
+                }
+            ]
         }
-        ]
-    }
     {% endschema %}`
 
 ----------------------------------------------------
