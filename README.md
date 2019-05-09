@@ -15,20 +15,20 @@ une doc est disponible ici : https://shopify.github.io/liquid/
 Tour rapide du language Liquid 
 
 Opérateurs
-== égalité
-!= non égalité
+`==` égalité
+`!=` non égalité
 
 Condition simple
-{% if condition == true %} It's true {% endif%}
+`{% if condition == true %} It's true {% endif%}`
+
 Condition avancé
-{% if condition == true %} It's true {% elsif condition == false %} It's false {% else %} It's not true nor false {% endif%}
+`{% if condition == true %} It's true {% elsif condition == false %} It's false {% else %} It's not true nor false {% endif%}`
 
 Affichage d'une variable
-{{ ma_var }}
+`{{ ma_var }}`
 
 Commentaire 
-
-{% comment %} Ceci est un commentaire {% endcomment %}
+`{% comment %} Ceci est un commentaire {% endcomment %}`
 
 ----------------------------------------------------
 
@@ -38,9 +38,44 @@ Comme dans tout fichier html, il est possible de faire appels à des ressources 
 
 B/ Les sections ou modules
 Elles se composent de deux parties :
-Une partie gérant l'affichage et le balisage des données
-Une partie de définition des paramètres de champs de la section en Json :
 
+- Une partie gérant l'affichage et le balisage des données
+
+- Une partie de définition des paramètres de champs de la section en Json :
+
+`{% schema %}
+  {
+    "name": "Title only",
+    "name_translations": { "fr": "Titre seul" },
+    "class": "index-section",
+    "icon": "fa fa-font",
+    "hidden_from_user": false,
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "label_translations": { "fr": "Titre" },
+        "default": "Title",
+        "default_translations": { "fr": "Titre" }
+      },
+      ...
+          {
+            "label": "Left",
+            "label_translations": { "fr": "Gauche" },
+            "value": "left"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Title only",
+        "name_translations": { "fr": "Titre seul" }
+      }
+    ]
+  }
+{% endschema %}`
 
 ----------------------------------------------------
 
