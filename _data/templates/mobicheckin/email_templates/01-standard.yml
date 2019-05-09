@@ -1,0 +1,43 @@
+key: "standard"
+displayed_name: "Standard"
+screenshot_url: ""
+demo_url: ""
+sections:
+  - filename: "banner"
+    body_url: "https://templates.applidget.com/mobicheckin/email_templates/standard/sections/banner.liquid"
+  - filename: "button"
+    body_url: "https://templates.applidget.com/mobicheckin/email_templates/standard/sections/button.liquid"
+  - filename: "footer"
+    body_url: "https://templates.applidget.com/mobicheckin/email_templates/standard/sections/footer.liquid"
+  - filename: "header"
+    body_url: "https://templates.applidget.com/mobicheckin/email_templates/standard/sections/header.liquid"
+  - filename: "guests-list"
+    body_url: "https://templates.applidget.com/mobicheckin/email_templates/standard/sections/guests-list.liquid"
+  - filename: "qrcode"
+    body_url: "https://templates.applidget.com/mobicheckin/email_templates/standard/sections/qrcode.liquid"
+  - filename: "order-summary"
+    body_url: "https://templates.applidget.com/mobicheckin/email_templates/standard/sections/order-summary.liquid"
+  - filename: "text"
+    body_url: "https://templates.applidget.com/mobicheckin/email_templates/standard/sections/text.liquid"
+  - filename: "codeit"
+    body_url: "https://templates.applidget.com/mobicheckin/email_templates/standard/sections/codeit.liquid"
+layouts:
+  - filename: "theme"
+    name: "Default"
+    name_translations:
+      fr: "Par défaut"
+    body_url: "https://templates.applidget.com/mobicheckin/email_templates/standard/layouts/theme.liquid"
+config:
+  main_settings: "https://templates.applidget.com/mobicheckin/email_templates/standard/config/main_settings_schema.json"
+  presets:
+    default:
+      en: "https://templates.applidget.com/mobicheckin/email_templates/standard/config/presets.en.json"
+      fr: "https://templates.applidget.com/mobicheckin/email_templates/standard/config/presets.fr.json"
+    ticketing:
+      en: "https://templates.applidget.com/mobicheckin/email_templates/standard/config/presets.ticketing.en.json"
+      fr: "https://templates.applidget.com/mobicheckin/email_templates/standard/config/presets.ticketing.fr.json"
+    ticket:
+      en: "https://templates.applidget.com/mobicheckin/email_templates/standard/config/presets.ticket.en.json"
+      fr: "https://templates.applidget.com/mobicheckin/email_templates/standard/config/presets.ticket.fr.json"
+  translations: "https://templates.applidget.com/mobicheckin/email_templates/standard/config/translations.json"
+  skin: "default"

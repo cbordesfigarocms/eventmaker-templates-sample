@@ -1,0 +1,100 @@
+{% if section.settings.image != blank %}
+  <!--[if mso | IE]>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
+      <tr>
+        <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+  <![endif]-->
+  <div style="margin:0 auto;max-width:600px;background:#fff;" data-section-id="{{ section.id }}" data-section-type="banner">
+    <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#fff;" align="center" border="0">
+      <tbody>
+        <tr>
+          <td style="text-align:center;vertical-align:top;font-size:0px;padding:0px;">
+            <!--[if mso | IE]>
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="vertical-align:top;width:600px;">
+            <![endif]-->
+            <div aria-labelledby="mj-column-per-100" class="mj-column-per-100" style="vertical-align:top;display:inline-block;font-size:13px;text-align:left;width:100%;">
+              <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                <tbody>
+                  <tr>
+                    <td style="word-break:break-word;font-size:0px;padding:0px;" align="center">
+                      <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border-spacing:0px;" align="center" border="0">
+                        <tbody>
+                          <tr>
+                            <td style="width:{{section.settings.image_width | append : 'px' }};">
+                              {% if section.settings.button_link != blank %}
+                                <a href="{{section.settings.button_link | parse_liquid}}" target="_blank">
+                                  <img alt="{{ event.title }}" title="" height="auto" src="{{ section.settings.image }}" style="border:none;border-radius:;display:block;outline:none;text-decoration:none;width:100%;height:auto;" width="{{section.settings.image_width}}">
+                                </a>
+                              {% else %}
+                                <img alt="{{ event.title }}" title="" height="auto" src="{{ section.settings.image }}" style="border:none;border-radius:;display:block;outline:none;text-decoration:none;width:100%;height:auto;" width="{{section.settings.image_width}}">
+                              {% endif %}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--[if mso | IE]>
+                  </td>
+                </tr>
+              </table>
+            <![endif]-->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!--[if mso | IE]>
+        </td>
+      </tr>
+    </table>
+  <![endif]-->
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Banner / Single image",
+    "name_translations": { "fr": "Bannière / Image seule" },
+    "class": "index-section",
+    "icon": "fa fa-picture-o",
+    "settings": [
+      {
+        "type": "range",
+        "id": "image_width",
+        "label": "Width of the image",
+        "label_translations": { "fr": "Largeur de l'image" },
+        "min": 100,
+        "max": 600,
+        "step": 10,
+        "unit": "px",
+        "default": 600
+      },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Banner / Image",
+        "label_translations": { "fr": "Bannière / Image" },
+        "info": "If the width of your image is over the selected value above, we cannot ensure an optimal rendering on every mail client",
+        "info_translations": { "fr": "Au-delà de la largeur sélectionnée ci-dessus, nous ne pouvons assurer un rendu optimal sur tous les clients mail" }
+      },
+      {
+        "type": "text",
+        "id": "button_link",
+        "label": "Link to some other page",
+        "label_translations": { "fr": "Lien vers une autre page" },
+        "info": "Ex: http://www.eventmaker.io"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Banner / Single image",
+        "name_translations": { "fr": "Bannière / Image seule" }
+      }
+    ]
+  }
+{% endschema %}

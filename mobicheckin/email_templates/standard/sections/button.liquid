@@ -1,0 +1,319 @@
+{% assign button_color = settings.color_button %}
+{% if section.settings.enable_custom_css == true %}
+  {% assign button_color = section.settings.button_color %}
+{% endif %}
+
+{% assign link_button = nil %}
+{% assign show = true %}
+
+{% case section.settings.button_type %}
+  {% when 'badge' %}
+    {% if guest.guest_category.badge_enabled == true and guest.status == "registered" %}
+      {% assign link_button = guest.badge_url %}
+      {% assign target_blank = "target='_blank'" %}
+    {% endif %}
+    {% if is_preview != true and link_button == nil or link_button == blank %}
+      {% assign show = false %}
+    {% endif %}
+  {% when 'registration' %}
+    {% assign link_button = guest.registration_form_url %}
+    {% if section.settings.step_number != blank %}
+      {% assign link_button = link_button | append: "&step_number=" | append: section.settings.step_number %}
+    {% endif %}
+  {% when 'accepted' %}
+    {% assign link_button = guest.registration_form_url %}
+    {% if section.settings.enable_change_category and section.settings.guest_category_id != blank %}
+      {% assign link_button = link_button | append: "&guest_category_id=" | append: section.settings.guest_category_id %}
+    {% endif %}
+    {% if section.settings.auto_submit_registration == true %}
+      {% assign link_button = link_button | append: "&auto_submit=true" %}
+    {% endif %}
+  {% when 'confirmation' %}
+    {% assign link_button = "https://app.eventmaker.io/public/events/"| append: event.id | append: "/guests/display_confirmation_message_from_order_uid?order_uid="| append: guest.order_uid %}
+  {% when 'external_link' %}
+    {% assign link_button = section.settings.button_link | parse_liquid %}
+    {% unless link_button contains "http" %}
+      {% assign link_button = "http://" | append: link_button %}
+    {% endunless %}
+    {% if link_button == nil or link_button == blank %}
+      {% assign show = false %}
+    {% endif %}
+  {% when 'website_page' %}
+    {% capture link_button %}{% website_url section.settings.website_page_url %}{% endcapture %}
+  {% when 'declined' %}
+    {% assign link_button = guest.decline_url %}
+    {% if section.settings.auto_submit_decline == true %}
+      {% assign link_button = link_button | append: "&auto_submit=true" %}
+    {% endif %}
+  {% when 'document' %}
+    {% for document in guest.documents_collection %}
+      {% if document.template_name == section.settings.document_name %}
+        {% assign link_button = document.url %}
+      {% endif %}
+    {% endfor %}
+    {% if link_button == nil or link_button == blank %}
+      {% assign show = false %}
+    {% endif %}
+  {% when 'goto_payment' %}
+    {% assign link_button = guest.online_payment_url %}
+    {% if guest.carts.size == 0 or guest.payment_status == "PAID" and guest.payment_status == "FREE" and guest.payment_merchant_type != "ogone" %}
+      {% assign show = false %}
+    {% endif %}
+  {% else %}
+    {% assign link_button = section.settings.button_link | parse_liquid %}
+    {% if link_button == blank or link_button == nil %}
+      {% assign show = false %}
+    {% endif %}
+{% endcase %}
+
+{% if show == true or is_preview == true %}
+  <!--[if mso | IE]>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="width:600px;">
+      <tr>
+        <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+  <![endif]-->
+  <div style="margin:0 auto;max-width:600px;background:#fff;" data-section-id="{{ section.id }}" data-section-type="button">
+    <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#fff;" align="center" border="0">
+      <tbody>
+        <tr>
+          <td style="text-align:center;vertical-align:top;font-size:0px;padding:0px;">
+            <!--[if mso | IE]>
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="vertical-align:top;width:600px;">
+            <![endif]-->
+            <div aria-labelledby="mj-column-per-100" class="mj-column-per-100" style="vertical-align:top;display:inline-block;font-size:13px;text-align:left;width:100%;">
+              <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                <tbody>
+                  <tr>
+                    <td style="word-break:break-word;font-size:0px;padding:15px;" align="center">
+                      <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:separate;" align="center" border="0">
+                        <tbody>
+                          <tr>
+                            <td style="border:none;border-radius:0px;color:{{ settings.color_button_text }};cursor:auto;padding:12px 30px;" align="center" valign="top" bgcolor="{{ button_color }}">
+                              <a href="{{ link_button }}" style="display:inline-block;text-decoration:none;background:{{ button_color }};color:{{ settings.color_button_text }};font-family:Helvetica;font-size:16px;font-weight:bold;margin:0px;" target="_blank">
+                                {{ section.settings.button_label }}
+                              </a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--[if mso | IE]>
+                  </td>
+                </tr>
+              </table>
+            <![endif]-->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!--[if mso | IE]>
+        </td>
+      </tr>
+    </table>
+  <![endif]-->
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Button",
+    "name_translations": { "fr": "Bouton" },
+    "icon": "fa fa-th-large",
+    "settings": [
+      {
+        "type": "select",
+        "id": "button_type",
+        "label": "Button type",
+        "label_translations": { "fr": "Type du bouton" },
+        "default": "badge",
+        "options": [
+          {
+            "value": "registration",
+            "label": "Registration",
+            "label_translations": { "fr": "Inscription" }
+          },
+          {
+            "value": "accepted",
+            "label": "RSVP accepted",
+            "label_translations": { "fr": "RSVP accepter" }
+          },
+          {
+            "value": "badge",
+            "label": "Badge",
+            "label_translations": { "fr": "Badge" }
+          },
+          {
+            "value": "confirmation",
+            "label": "Confirmation page",
+            "label_translations": { "fr": "Page de confirmation" }
+          },
+          {
+            "value": "external_link",
+            "label": "External link",
+            "label_translations": { "fr": "Lien externe" }
+          },
+          {
+            "value": "website_page",
+            "label": "Link to website page",
+            "label_translations": { "fr": "Lien vers une page du site" }
+          },
+          {
+            "value": "document",
+            "label": "Document",
+            "label_translations": { "fr": "Document" }
+          },
+          {
+            "value": "declined",
+            "label": "RSVP declined",
+            "label_translations": { "fr": "RSVP décliner" }
+          },
+          {
+            "value": "goto_payment",
+            "label": "Payment link",
+            "label_translations": { "fr": "Lien de paiement" }
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "button_link",
+        "label": "Button link",
+        "label_translations": { "fr": "Lien du bouton" },
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "==",
+          "value": "external_link"
+        }
+      },
+      {
+        "type": "website_page_picker",
+        "id": "website_page_url",
+        "label": "Link to your website's page",
+        "label_translations": { "fr": "Lien vers une page de votre site" },
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "==",
+          "value": "website_page"
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "auto_submit_decline",
+        "label": "Auto submit",
+        "label_translations": { "fr": "Soumission automatique" },
+        "default": true,
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "==",
+          "value": "declined"
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_change_category",
+        "label": "Change the guest's category",
+        "label_translations": { "fr": "Changer le participant de catégorie" },
+        "info": "Link to the guest's registration form. By selecting a category, the guest will be transfered to this new category upon registration.",
+        "info_translations": { "fr" : "Lien vers le formulaire d'inscription du participant. En sélectionnant une catégorie, le participant sera transféré vers cette nouvelle catégorie dès son inscription." },
+        "default": false,
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "==",
+          "value": "accepted"
+        }
+      },
+      {
+        "type": "guest_category_picker",
+        "id": "guest_category_id",
+        "label": "Choose the registration category",
+        "label_translations": { "fr": "Choisir la catégorie d'inscription" },
+        "show_if": {
+          "source_id": "enable_change_category",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "auto_submit_registration",
+        "label": "Auto submit",
+        "label_translations": { "fr": "Soumission automatique" },
+        "default": true,
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "==",
+          "value": "accepted"
+        }
+      },
+      {
+        "type": "document_picker",
+        "id": "document_name",
+        "label": "Document",
+        "label_translations": { "fr": "Document" },
+        "info": "The button is a direct link to the document's PDF, on the condition that the document has been configured in the guest's category",
+        "info_translations": { "fr" : "Lien direct vers le PDF du document de votre choix, à condition que le document ait été configuré dans la catégorie du participant" },
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "==",
+          "value": "document"
+        }
+      },
+      {
+        "type": "text",
+        "id": "button_label",
+        "label": "Button text",
+        "label_translations": { "fr": "Libellé du bouton" }
+      },
+      {
+        "type": "text",
+        "id": "step_number",
+        "label": "Step number",
+        "label_translations": { "fr": "Numéro de l'étape" },
+        "info": "If the form contains multiple steps, then you can choose the step by which to start",
+        "info_translations": { "fr" : "Si votre formulaire contient plusieurs étapes, cela permet d'amener le participant à une étape spécifique." },
+        "default": "1",
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "==",
+          "value": "registration"
+        }
+      },
+      {
+        "type": "header",
+        "content": "Appearance",
+        "content_translations": { "fr": "Apparence" }
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_custom_css",
+        "label": "Apply a custom style",
+        "label_translations": { "fr": "Appliquer un style personnalisé" },
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "button_color",
+        "label": "Button color",
+        "label_translations": { "fr": "Couleur du bouton" },
+        "show_if": {
+          "source_id": "enable_custom_css",
+          "operator": "==",
+          "value": true
+        },
+        "default": "#000"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Button",
+        "name_translations": { "fr": "Bouton" }
+      }
+    ]
+  }
+{% endschema %}

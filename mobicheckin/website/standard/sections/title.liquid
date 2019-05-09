@@ -1,0 +1,423 @@
+<div class="container {{ settings.spacing }}" data-section-id="{{ section.id }}" data-section-type="title">
+  <div class="text-center">
+    <h2 class="title {% if section.settings.text_size == 'large' %}big-title{% endif %} down-s">{{ section.settings.title }}</h1>
+    {% if section.settings.text.html.size > 6 %}
+      <div class="h2-subtitle {% if section.settings.text_size == 'large' %}big-subtitle{% endif %} down-s">{{ section.settings.text.html | parse_liquid }}</div>
+    {% endif %}
+    {% include "button", params: section.settings %}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Title only",
+    "name_translations": { "fr": "Titre seul" },
+    "class": "index-section",
+    "icon": "fa fa-font",
+    "hidden_from_user": false,
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "label_translations": { "fr": "Titre" },
+        "default": "Title",
+        "default_translations": { "fr": "Titre" }
+      },
+      {
+        "type": "rte",
+        "id": "text",
+        "label": "Text",
+        "label_translations": { "fr": "Texte" },
+        "default": "Cum autem commodis intervallata temporibus convivia longa et noxia coeperint autem commodis intervallata temporibus convivia longa et noxia coeperint autem commodis intervallata temporibus convivia longa et noxia coeperint."
+      },
+      {
+        "type": "select",
+        "id": "text_size",
+        "label": "Text size",
+        "label_translations": { "fr": "Taille du texte" },
+        "default": "medium",
+        "options": [
+          {
+            "label": "Medium",
+            "label_translations": { "fr": "Moyen" },
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "label_translations": { "fr": "Gros" },
+            "value": "large"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "button_type",
+        "label": "Button type",
+        "label_translations": { "fr": "Type du bouton" },
+        "default": "external_link",
+        "options": [
+          {
+            "value": "external_link",
+            "label": "External link",
+            "label_translations": { "fr": "Lien externe" }
+          },
+          {
+            "value": "website_page",
+            "label": "Link to another page",
+            "label_translations": { "fr": "Lien vers une autre page" }
+          },
+          {
+            "value": "registration",
+            "label": "Registration",
+            "label_translations": { "fr": "Inscription" }
+          },
+          {
+            "value": "add_to_my_calendar",
+            "label": "Add to my calendar",
+            "label_translations": { "fr": "Ajouter à mon calendrier" }
+          },
+          {
+            "value": "declined",
+            "label": "RSVP declined",
+            "label_translations": { "fr": "RSVP décliner" }
+          },
+          {
+            "value": "accepted",
+            "label": "RSVP accepted",
+            "label_translations": { "fr": "RSVP accepter" }
+          },
+          {
+            "value": "badge",
+            "label": "Badge",
+            "label_translations": { "fr": "Badge" }
+          },
+          {
+            "value": "document",
+            "label": "Document",
+            "label_translations": { "fr": "Document" }
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "button_link",
+        "label": "Button link",
+        "label_translations": { "fr": "Lien du bouton" },
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "==",
+          "value": "external_link"
+        }
+      },
+      {
+        "type": "website_page_picker",
+        "id": "website_page_url",
+        "label": "Link to your website's page",
+        "label_translations": { "fr": "Lien vers une page de votre site" },
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "==",
+          "value": "website_page"
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "auto_submit",
+        "label": "Auto submit",
+        "label_translations": { "fr": "Soumission automatique" },
+        "default": true,
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "=~",
+          "value": "^(?:accepted|declined)$"
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_change_category",
+        "label": "Change the guest's category",
+        "label_translations": { "fr": "Changer le participant de catégorie" },
+        "info": "Link to the guest's registration form. By selecting a category, the guest will be transfered to this new category on form submission.",
+        "info_translations": { "fr" : "Lien vers le formulaire d'inscription du participant. En sélectionnant une catégorie, le participant sera transféré vers cette nouvelle catégorie à la soumission du formulaire." },
+        "default": false,
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "=~",
+          "value": "^(?:accepted|declined)$"
+        }
+      },
+      {
+        "type": "guest_category_picker",
+        "id": "guest_category_id",
+        "label": "Choose the registration category",
+        "label_translations": { "fr": "Choisir la catégorie d'inscription" },
+        "show_if": {
+          "source_id": "enable_change_category",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "document_picker",
+        "id": "document_name",
+        "label": "Document",
+        "label_translations": { "fr": "Document" },
+        "info": "The button is a direct link to the document's PDF, on the condition that the document has been configured in the guest's category",
+        "info_translations": { "fr" : "Lien direct vers le PDF du document de votre choix, à condition que le document ait été configuré dans la catégorie du participant" },
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "==",
+          "value": "document"
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_icon",
+        "label": "Show the icon",
+        "label_translations": { "fr": "Montrer l'icône" },
+        "default": true,
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "==",
+          "value": "add_to_my_calendar"
+        }
+      },
+      {
+        "type": "text",
+        "id": "button_label",
+        "label": "Button text",
+        "label_translations": { "fr": "Libellé du bouton" },
+        "default": "Button",
+        "default_translations": { "fr": "Bouton" },
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "!=",
+          "value": "registration"
+        }
+      },
+      {
+        "type": "header",
+        "content": "All visitors",
+        "content_translations": { "fr": "Tous les visiteurs" },
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "==",
+          "value": "registration"
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "force_new_registration",
+        "label": "New registration for all visitors",
+        "label_translations": { "fr": "Nouvelle inscription pour tous les visiteurs" },
+        "info": "Force all visitors to create a new participant.",
+        "info_translations": { "fr" : "Forcera tous les visiteurs à créer un nouveau participant." },
+        "default": false,
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "==",
+          "value": "registration"
+        }
+      },
+      {
+        "type": "text",
+        "id": "button_label_force_new_registration",
+        "label": "Button text",
+        "label_translations": { "fr": "Libellé du bouton" },
+        "default": "New Registration",
+        "default_translations": { "fr": "Nouvelle inscription" },
+        "show_if": {
+          "source_id": "force_new_registration",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "guest_category_picker",
+        "id": "new_registration_category_id",
+        "label": "Guests' category",
+        "label_translations": { "fr": "Catégorie d'inscription" },
+        "show_if": {
+          "source_id": "force_new_registration",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "header",
+        "content": "Unknown visitors",
+        "content_translations": { "fr": "Visiteurs non connus" },
+        "show_if": {
+          "source_id": "force_new_registration",
+          "operator": "==",
+          "value": false
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "unknown_visitors_registration",
+        "label": "Authorize unknown visitors to register",
+        "label_translations": { "fr": "Autoriser l'inscription des visiteurs non connus" },
+        "default": false,
+        "show_if": {
+          "source_id": "force_new_registration",
+          "operator": "==",
+          "value": false
+        }
+      },
+      {
+        "type": "text",
+        "id": "button_label_unknown_visitor_registration",
+        "label": "Button text",
+        "label_translations": { "fr": "Libellé du bouton" },
+        "default": "New Registration",
+        "default_translations": { "fr": "Nouvelle inscription" },
+        "show_if": {
+          "source_id": "unknown_visitors_registration",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "guest_category_picker",
+        "id": "unknown_visitors_category_id",
+        "label": "New guests' category",
+        "label_translations": { "fr": "Catégorie des nouveaux participants" },
+        "show_if": {
+          "source_id": "unknown_visitors_registration",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "header",
+        "content": "Known visitors",
+        "content_translations": { "fr": "Visiteurs connus" },
+        "show_if": {
+          "source_id": "force_new_registration",
+          "operator": "==",
+          "value": false
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "change_known_visitors_category",
+        "label": "Change category of guests already registered",
+        "label_translations": { "fr": "Changer la catégorie des visiteurs connus" },
+        "info": "Will allow the existing participant to change category. Otherwise it will be a simple edition in its original category.",
+        "info_translations": { "fr" : "Permettra au participant déjà existant de changer de catégorie. Sinon il s'agira d'une édition simple dans sa catégorie originale." },
+        "default": false,
+        "show_if": {
+          "source_id": "force_new_registration",
+          "operator": "==",
+          "value": false
+        }
+      },
+      {
+        "type": "text",
+        "id": "button_label_known_visitors",
+        "label": "Button text",
+        "label_translations": { "fr": "Libellé du bouton" },
+        "default": "Edit registration",
+        "default_translations": { "fr": "Edition" },
+        "show_if": {
+          "source_id": "force_new_registration",
+          "operator": "==",
+          "value": false
+        }
+      },
+      {
+        "type": "guest_category_picker",
+        "id": "known_visitors_new_category_id",
+        "label": "Known visitors' new category",
+        "label_translations": { "fr": "Nouvelle catégorie des visiteurs connus" },
+        "show_if": {
+          "source_id": "change_known_visitors_category",
+          "operator": "==",
+          "value": true
+        }
+      },
+      {
+        "type": "text",
+        "id": "step_number",
+        "label": "Step number",
+        "label_translations": { "fr": "Numéro de l'étape" },
+        "info": "If the form contains multiple steps, then you can choose the step by which to start",
+        "info_translations": { "fr" : "Si votre formulaire contient plusieurs étapes, cela permet d'amener le participant à une étape spécifique." },
+        "default": "1",
+        "show_if": {
+          "source_id": "button_type",
+          "operator": "==",
+          "value": "registration"
+        }
+      },
+      {
+        "type": "header",
+        "content": "Style",
+        "content_translations": { "fr": "Style" }
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_custom_css",
+        "label": "Apply a custom style",
+        "label_translations": { "fr": "Appliquer un style personnalisé" },
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "button_color",
+        "label": "Button color",
+        "label_translations": { "fr": "Couleur du bouton" },
+        "show_if": {
+          "source_id": "enable_custom_css",
+          "operator": "==",
+          "value": true
+        },
+        "default": "#000"
+      },
+      {
+        "type": "color",
+        "id": "button_text_color",
+        "label": "Button text color",
+        "label_translations": { "fr": "Couleur du texte du bouton" },
+        "show_if": {
+          "source_id": "enable_custom_css",
+          "operator": "==",
+          "value": true
+        },
+        "default": "#000"
+      },
+      {
+        "type": "select",
+        "id": "button_align",
+        "label": "Button align",
+        "label_translations": { "fr": "Alignement du bouton" },
+        "default": "center",
+        "options": [
+          {
+            "label": "Right",
+            "label_translations": { "fr": "Droite" },
+            "value": "right"
+          },
+          {
+            "label": "Center",
+            "label_translations": { "fr": "Centre" },
+            "value": "center"
+          },
+          {
+            "label": "Left",
+            "label_translations": { "fr": "Gauche" },
+            "value": "left"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Title only",
+        "name_translations": { "fr": "Titre seul" }
+      }
+    ]
+  }
+{% endschema %}

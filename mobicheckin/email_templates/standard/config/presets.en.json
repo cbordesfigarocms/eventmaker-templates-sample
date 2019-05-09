@@ -1,0 +1,81 @@
+{
+  "default":{
+    "general":{
+      "settings":{
+        "color_body_bg":"#FAFAFA",
+        "color_body_text":"{{ event.secondary_color }}",
+        "color_button":"{{ event.primary_color }}",
+        "color_button_text":"#FFFFFF"
+      }
+    },
+    "sections":{
+      "header":{
+        "type":"header",
+        "settings":{
+          "email_browser_1": "See this email in the browser",
+          "email_browser_2" : "Click here"
+        }
+      },
+      "banner":{
+        "type":"banner",
+        "settings":{
+          "image": "{% if event.cover_email != blank %}{{ event.cover_email }}{% else %}http://placehold.it/600x200{% endif %}"
+        }
+      },
+      "text":{
+        "type":"text",
+        "settings":{
+          "text": {
+            "html": "<h2>Title of the email</h2>\n<div>Dear <<guest.first_name>> <<guest.last_name>>,</div>\n<br /><div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Cras sollicitudin luctus justo, non faucibus metus.</strong> Morbi consectetur turpis nec justo dapibus cursus. <span style='color: #446CB3;'>Interdum et malesuada</span> fames ac ante ipsum primis in faucibus. Suspendisse eget congue <a href='http://eventmaker.io' target='_blank'>nulla</a>. Sed volutpat leo vitae urna gravida molestie. Suspendisse faucibus quis lectus at finibus. </div>\n",
+            "draftjs_content":{"entityMap":{"0":{"type":"DROP_FIELD", "mutability":"IMMUTABLE", "data":{"text":["guest.first_name"]}}, "1":{"type":"DROP_FIELD", "mutability":"IMMUTABLE", "data":{"text":["guest.last_name"]}}, "2":{"type":"LINK", "mutability":"MUTABLE", "data":{"url":"http://eventmaker.io"}}}, "blocks":[{"key":"6frs8", "text":"Titre de l'email", "type":"header-two", "depth":0, "inlineStyleRanges":null, "entityRanges":null, "data":{}}, {"key":"3tj58", "text":"Cher <<guest.first_name>> <<guest.last_name>>,", "type":"unstyled", "depth":0, "inlineStyleRanges":null, "entityRanges":[{"offset":5, "length":20, "key":0}, {"offset":26, "length":19, "key":1}], "data":{}}, {"key":"acnnr", "text":"", "type":"unstyled", "depth":0, "inlineStyleRanges":null, "entityRanges":null, "data":{}}, {"key":"dj1r6", "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sollicitudin luctus justo, non faucibus metus. Morbi consectetur turpis nec justo dapibus cursus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Suspendisse eget congue nulla. Sed volutpat leo vitae urna gravida molestie. Suspendisse faucibus quis lectus at finibus. ", "type":"unstyled", "depth":0, "inlineStyleRanges":[{"offset":57, "length":51, "style":"BOLD"}, {"offset":160, "length":21, "style":"fontColor#446CB3"}], "entityRanges":[{"offset":246, "length":5, "key":2}], "data":{}}]}
+          }
+        }
+      },
+      "button-custom-link":{
+        "type":"button",
+        "settings":{
+          "button_type": "external_link",
+          "button_label": "Visit our website",
+          "button_link": "http://www.eventmaker.io/",
+          "enable_custom_css": false,
+          "button_color": "#000"
+        }
+      },
+      "button-registration-form":{
+        "type":"button",
+        "settings":{
+          "button_type": "registration",
+          "button_label": "Register",
+          "enable_change_category": false,
+          "auto_submit_registration": false,
+          "guest_category_id": "",
+          "enable_custom_css": false,
+          "button_color": "#000"
+        }
+      },
+      "text-2":{
+        "type":"text",
+        "settings":{
+          "text": {
+            "html": "<div>Nulla venenatis ligula at leo volutpat sollicitudin. Integer ut quam id lectus semper fermentum non at felis. Etiam aliquet sapien in ipsum mattis, at porttitor libero blandit.</div>",
+            "draftjs_content": {}
+          }
+        }
+      },
+      "footer":{
+        "type":"footer",
+        "settings":{
+          "footer_text": "You receive this email following your registration to this event.",
+          "takeout_text": "Manage your personal data"
+        }
+      }
+    },
+    "sections_order": [
+      "banner",
+      "text",
+      "button-custom-link",
+      "button-registration-form",
+      "text-2"
+    ]
+  }
+}
