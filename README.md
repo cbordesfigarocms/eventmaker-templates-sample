@@ -14,15 +14,21 @@ une doc est disponible ici : https://shopify.github.io/liquid/
 
 Tour rapide du language Liquid 
 
-Opérateurs
-`==` égalité
-`!=` non égalité
+Opérateurs  
+`==` égalité  
+`!=` non égalité  
 
-Condition simple
-`{% if condition == true %} It's true {% endif%}`
+Condition simple  
+`{% if condition == true %} It's true {% endif%}`  
 
-Condition avancé
-`{% if condition == true %} It's true {% elsif condition == false %} It's false {% else %} It's not true nor false {% endif%}`
+Condition avancé  
+`{% if condition == true %}  
+ It's true 
+{% elsif condition == false %}  
+It's false  
+{% else %}  
+It's not true nor false  
+{% endif%}`
 
 Affichage d'une variable
 `{{ ma_var }}`
@@ -41,7 +47,7 @@ Elles se composent de deux parties :
 
 - Une partie gérant l'affichage et le balisage des données
 
-- Une partie de définition des paramètres de champs de la section en Json :
+- Une partie de définition des paramètres de champs de la section en Json:
 
     `{% schema %}
         {
@@ -106,4 +112,3 @@ A ne pas faire: ../img.jpg
 Do / Dont
 
 ----------------------------------------------------
-
