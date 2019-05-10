@@ -17,7 +17,6 @@ Elles se composent de deux parties :
 - Une partie de définition des paramètres de champs de la section en Json:  
 
 `
-{% schema %}
     {
         "name": "Title only",
         "name_translations": { "fr": "Titre seul" },
@@ -49,7 +48,6 @@ Elles se composent de deux parties :
             }
         ]
     }
-{% endschema %}
 `
 
 ----------------------------------------------------  
