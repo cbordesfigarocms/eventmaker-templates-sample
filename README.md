@@ -16,7 +16,7 @@ Elles se composent de deux parties :
 - Une partie gérant l'affichage et le balisage des données  
 - Une partie de définition des paramètres de champs de la section en Json:  
 
-
+`
 {% schema %}
     {
         "name": "Title only",
@@ -50,7 +50,7 @@ Elles se composent de deux parties :
         ]
     }
 {% endschema %}
-
+`
 
 ----------------------------------------------------  
   
